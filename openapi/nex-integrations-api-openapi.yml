@@ -1,0 +1,287 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Integrations API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Integrations
+paths:
+  /v1/integrations:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Lists all available integrations and their current connection status for the authenticated workspace. Returns each integration type/provider combination with any active connections.
+      tags:
+      - Integrations
+      summary: List integrations
+      operationId: listIntegrations
+      responses:
+        '200':
+          description: List of integrations with connection status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/developer.IntegrationResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/integrations/{type}/{provider}/connect:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Initiates an OAuth flow to connect a third-party integration. Returns an authorization URL that the user must visit to grant access, and a connect_id used to poll for completion status.
+      tags:
+      - Integrations
+      summary: Start OAuth connection
+      operationId: startIntegrationConnect
+      parameters:
+      - description: Integration type
+        name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - email
+          - calendar
+          - messaging
+          - crm
+      - description: Integration provider
+        name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - google
+          - microsoft
+          - slack
+          - attio
+          - hubspot
+          - salesforce
+      responses:
+        '200':
+          description: OAuth authorization URL and connect ID for polling
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ConnectResponse'
+        '400':
+          description: Invalid integration type/provider combination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '429':
+          description: Rate limit exceeded (10 requests/minute)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/integrations/connect/{connect_id}/status:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Polls the status of an in-progress OAuth connection. The connect_id is returned by the Start OAuth Connection endpoint. Poll this endpoint until the status changes from "pending" to "connected". The connect_id expires after 10 minutes.
+      tags:
+      - Integrations
+      summary: Get connection status
+      operationId: getConnectStatus
+      parameters:
+      - description: Connect ID returned by the start connect endpoint
+        name: connect_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Current connection status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ConnectStatusResponse'
+        '400':
+          description: Invalid connect_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '410':
+          description: Connect ID has expired (10 minute TTL)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/integrations/connections/{connection_id}:
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Disconnects an active integration connection. The connection ID can be found in the list integrations response.
+      tags:
+      - Integrations
+      summary: Disconnect integration
+      operationId: disconnectIntegration
+      parameters:
+      - description: Connection ID to disconnect
+        name: connection_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successfully disconnected
+        '400':
+          description: Invalid connection_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Connection not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.ConnectStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Connection status: "pending" while waiting, "connected" when complete'
+          enum:
+          - pending
+          - connected
+          example: connected
+        connection_id:
+          type: integer
+          description: ID of the newly created connection (only present when status is "connected")
+          example: 12345
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.ConnectionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Connection ID
+          example: 12345
+        status:
+          type: string
+          description: Connection status
+          example: active
+        identifier:
+          type: string
+          description: Account identifier (email address, username, etc.)
+          example: user@example.com
+    developer.ConnectResponse:
+      type: object
+      properties:
+        auth_url:
+          type: string
+          description: OAuth authorization URL. Open this in a browser for the user to grant access.
+          example: https://accounts.google.com/o/oauth2/v2/auth?...
+        connect_id:
+          type: string
+          description: Encrypted token to poll for connection status. Expires after 10 minutes.
+          example: eyJ3Ijo...
+    developer.IntegrationResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Integration type
+          enum:
+          - email
+          - calendar
+          - messaging
+          - crm
+          example: email
+        provider:
+          type: string
+          description: Integration provider
+          enum:
+          - google
+          - microsoft
+          - slack
+          - attio
+          - hubspot
+          - salesforce
+          example: google
+        display_name:
+          type: string
+          description: Human-readable name of the integration
+          example: Gmail
+        description:
+          type: string
+          description: Description of the integration
+          example: Connect to your Gmail account to automatically sync emails, create contacts, and update context.
+        connections:
+          type: array
+          description: Active connections for this integration
+          items:
+            $ref: '#/components/schemas/developer.ConnectionResponse'
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

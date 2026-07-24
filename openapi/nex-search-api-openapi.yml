@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Search API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Search
+paths:
+  /v1/search:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Search across all records in the workspace. Results are grouped by object type (e.g., person, company). Partial results are returned if some search types fail.
+      tags:
+      - Search
+      summary: Search records
+      operationId: searchRecords
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.SearchRequest'
+        description: Search query
+        required: true
+      responses:
+        '200':
+          description: Search results grouped by type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.SearchResponse'
+        '400':
+          description: Bad request - Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.SearchResponse:
+      type: object
+      properties:
+        results:
+          type: object
+          description: Results grouped by object type (e.g., 'person', 'company')
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/developer.SearchResultResponse'
+        errored_search_types:
+          type: array
+          items:
+            type: string
+          description: Search types that encountered errors (partial results returned)
+      example:
+        results:
+          person:
+          - id: '1001'
+            primary_value: John Doe
+            matched_value: John Doe
+            score: 0.95
+            entity_definition_id: '10'
+          company:
+          - id: '2001'
+            primary_value: Doe Industries
+            matched_value: Doe Industries
+            score: 0.72
+            entity_definition_id: '11'
+        errored_search_types: []
+    developer.SearchRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Search query (1-500 characters)
+      example:
+        query: john doe
+    developer.SearchResultResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        primary_value:
+          type: string
+          description: Primary display value of the record
+        matched_value:
+          type: string
+          description: Value that matched the search query
+        score:
+          type: number
+          description: Relevance score
+        entity_definition_id:
+          type: string
+          description: Object definition ID
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

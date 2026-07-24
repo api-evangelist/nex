@@ -1,0 +1,156 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Insights API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Insights
+paths:
+  /v1/insights:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: 'Retrieve insights for the workspace. Supports three query modes: ''last'' for a rolling time window (e.g., ''30m'', ''2h''), ''from''/''to'' for a date range (RFC3339), or no time params for most recent insights.'
+      tags:
+      - Insights
+      summary: Get insights
+      operationId: getInsights
+      parameters:
+      - description: Rolling time window (e.g., '30m', '2h', '1d')
+        name: last
+        in: query
+        required: false
+        schema:
+          type: string
+      - description: Start of date range (RFC3339 UTC timestamp)
+        name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: End of date range (RFC3339 UTC timestamp)
+        name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: Maximum number of insights to return
+        name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: List of insights
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.InsightsResponse'
+        '400':
+          description: Bad request - Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/insights/stream:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Stream real-time insights via Server-Sent Events (SSE). On connect, recent insights are replayed as 'insight.replay' events (up to 20). New insights arrive as 'insight.batch.created' events. Keepalive comments are sent every 30 seconds.
+      tags:
+      - Insights
+      summary: Stream insights (SSE)
+      operationId: streamInsights
+      responses:
+        '200':
+          description: SSE event stream of insights
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: 'Server-Sent Events stream. Events: ''insight.batch.created'' (real-time new insights), ''insight.replay'' (historical replay on connect). Each event''s data field contains a JSON object with workspace, insights array, insight_count, and emitted_at.'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.InsightsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.InsightResponse'
+          description: Array of insight objects
+    developer.InsightResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique insight identifier
+        workspace_id:
+          type: string
+          description: Workspace the insight belongs to
+        content:
+          type: string
+          description: Human-readable insight text
+        type:
+          type: string
+          description: Insight category or type
+        entities:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+          description: Entities referenced in this insight
+        created_at:
+          type: string
+          format: date-time
+          description: When the insight was generated
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

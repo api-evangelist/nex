@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Compounding API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Compounding
+paths:
+  /v1/compounding/trigger:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: 'Triggers an on-demand compounding intelligence job for the workspace. Use after onboarding, file scanning, or bulk context ingestion to run intelligence pipelines immediately instead of waiting for the next scheduled cron cycle. Supported job types: consolidation (merge near-duplicate insights), pattern_detection (discover recurring patterns), playbook_synthesis (generate playbook rules from patterns), decay_sweep (reduce confidence on stale insights), and metrics (snapshot pipeline metrics). This endpoint is asynchronous and returns a job_run_id you can poll for status.'
+      tags:
+      - Compounding
+      summary: Trigger compounding job
+      operationId: triggerCompoundingJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/compounding.TriggerJobRequest'
+        description: Job trigger request
+        required: true
+      responses:
+        '202':
+          description: Job accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/compounding.TriggerJobResponse'
+        '400':
+          description: Bad request - Invalid job type or request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/compounding/jobs/{job_run_id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Returns the current state of a compounding job triggered through the developer API. Poll this endpoint with the job_run_id returned by the trigger endpoint until the status changes from accepted or running to completed or failed.
+      tags:
+      - Compounding
+      summary: Get compounding job status
+      operationId: getCompoundingJobStatus
+      parameters:
+      - name: job_run_id
+        in: path
+        required: true
+        description: The compounding job run identifier returned by the trigger endpoint
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/compounding.JobStatusResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    compounding.TriggerJobResponse:
+      type: object
+      properties:
+        job_run_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this job execution
+        job_type:
+          type: string
+          description: The type of job that was executed
+          enum:
+          - consolidation
+          - pattern_detection
+          - playbook_synthesis
+          - decay_sweep
+          - metrics
+        workspace_id:
+          type: integer
+          description: Workspace ID the job ran against
+        dry_run:
+          type: boolean
+          description: Whether the job ran in dry-run mode
+        status:
+          type: string
+          description: Current job status
+          enum:
+          - accepted
+        success:
+          type: boolean
+          description: Whether the job was accepted successfully
+    compounding.JobStatusResponse:
+      type: object
+      properties:
+        job_run_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this compounding job
+        job_type:
+          type: string
+          description: The compounding job type
+          enum:
+          - consolidation
+          - pattern_detection
+          - playbook_synthesis
+          - decay_sweep
+          - metrics
+        workspace_id:
+          type: integer
+          description: Workspace ID the job belongs to
+        status:
+          type: string
+          description: Current job status
+          enum:
+          - accepted
+          - running
+          - completed
+          - failed
+        dry_run:
+          type: boolean
+          description: Whether the job is running in dry-run mode
+        insights_scanned:
+          type: integer
+          description: Total number of insights evaluated during the job
+        insights_affected:
+          type: integer
+          description: Number of insights modified by the job
+        candidates_created:
+          type: integer
+          description: Number of candidates or rules created by the job
+        errors:
+          type: integer
+          description: Number of errors recorded during the job
+        started_at:
+          type: string
+          format: date-time
+          description: When the job entered the system
+        completed_at:
+          type: string
+          format: date-time
+          description: When the job completed, if it has finished
+        duration_ms:
+          type: integer
+          description: Total job duration in milliseconds after completion
+        error_details:
+          type: object
+          description: Structured error payload for failed jobs
+          additionalProperties: true
+    compounding.TriggerJobRequest:
+      type: object
+      required:
+      - job_type
+      properties:
+        job_type:
+          type: string
+          description: The type of compounding job to run
+          enum:
+          - consolidation
+          - pattern_detection
+          - playbook_synthesis
+          - decay_sweep
+          - metrics
+        dry_run:
+          type: boolean
+          description: If true, preview impact without persisting changes
+          default: false
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

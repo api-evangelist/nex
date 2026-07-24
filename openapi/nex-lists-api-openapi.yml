@@ -1,0 +1,899 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Lists
+paths:
+  /v1/lists/{id}:
+    put:
+      security:
+      - ApiKeyAuth: []
+      description: Add record to a list or update its list-specific attributes if it already exists
+      tags:
+      - Lists
+      summary: Upsert a list member
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateListMemberRequest'
+        description: List member upsert request
+        required: true
+      responses:
+        '200':
+          description: Created or updated list member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.CreateListMemberResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: upsertListMember
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Add record to a list
+      tags:
+      - Lists
+      summary: Add a list member
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateListMemberRequest'
+        description: List member creation request
+        required: true
+      responses:
+        '200':
+          description: Created list member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.CreateListMemberResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: addListMember
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves a list definition by its ID
+      tags:
+      - Lists
+      summary: Get a list by ID
+      operationId: getList
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: List definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ObjectResponse'
+        '400':
+          description: Bad request - Invalid list ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Permanently deletes a list definition
+      tags:
+      - Lists
+      summary: Delete a list
+      operationId: deleteList
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: List deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/lists/{id}/records:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves all records that belong to a specific list with pagination
+      tags:
+      - Lists
+      summary: Get records from a specific list
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.ListRecordsRequest'
+        description: List records request with pagination options
+        required: true
+      responses:
+        '200':
+          description: List of records with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListRecordsResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: getListRecords
+  /v1/lists/{id}/records/{record_id}:
+    patch:
+      security:
+      - ApiKeyAuth: []
+      description: Updates list-specific attributes for a record that belongs to a list
+      tags:
+      - Lists
+      summary: Update a record within a list
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpdateListRecordRequest'
+        description: List record update request
+        required: true
+      responses:
+        '200':
+          description: Updated list record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.UpdateListRecordResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List or record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: updateListRecord
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Removes a record from a list without deleting the record itself
+      tags:
+      - Lists
+      summary: Remove a record from a list
+      operationId: removeRecordFromList
+      parameters:
+      - description: List ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Record removed from list
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: List or record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/objects/{slug}/lists:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves all lists associated with a specific object type
+      tags:
+      - Lists
+      summary: List all lists for a specific object
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Include attribute definitions for each list
+        name: include_attributes
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: List of lists for the object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListObjectsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: listObjectLists
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new list associated with a specific object type
+      tags:
+      - Lists
+      summary: Create a list
+      operationId: createList
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateListRequest'
+        description: List to create
+        required: true
+      responses:
+        '200':
+          description: Created list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ObjectResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.UpdateListRecordRequest:
+      type: object
+      properties:
+        attributes:
+          description: Attributes to update
+          type: object
+          additionalProperties: {}
+      example:
+        attributes:
+          status: qualified
+          score: 92
+          notes: Had a great demo call, ready to move forward
+          source: referral
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.RecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027655'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-15T14:20:00Z'
+        updated_at: '2024-01-20T09:15:00Z'
+        attributes:
+          name:
+            first_name: Alice
+            last_name: Johnson
+          email_addresses:
+          - alice@techcorp.com
+          job_title: Product Manager
+          phone_number:
+            country_code: 1
+            number: '5551112222'
+          location:
+            street: 456 Innovation Dr
+            city: Austin
+            region: TX
+            postal_code: '73301'
+            country: US
+          linkedin:
+            username: alicejohnson
+            url: https://linkedin.com/in/alicejohnson
+    developer.UpdateListRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32417546405832962'
+        object_id: '32417546405832950'
+        type: person
+        workspace_id: '32417546405832945'
+        created_at: '2024-01-20T16:45:00Z'
+        updated_at: '2024-01-21T10:30:00Z'
+        attributes:
+          name:
+            first_name: Sarah
+            last_name: Chen
+          email_addresses:
+          - sarah@newstartup.com
+          job_title: VP Engineering
+          status: qualified
+          score: 92
+          notes: Had a great demo call, ready to move forward
+          source: referral
+    developer.ListRecordsRequest:
+      type: object
+      properties:
+        attributes:
+          $ref: '#/components/schemas/developer.AttributesParam'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/developer.SortParam'
+      example:
+        attributes: all
+        limit: 50
+        offset: 0
+        sort:
+          attribute: name
+          direction: asc
+    developer.ListRecordsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RecordResponse'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+      example:
+        data:
+        - id: '32414268188027655'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-15T14:20:00Z'
+          updated_at: '2024-01-20T09:15:00Z'
+          attributes:
+            name:
+              first_name: Alice
+              last_name: Johnson
+            email_addresses:
+            - alice@techcorp.com
+            job_title: Product Manager
+            phone_number:
+              country_code: 1
+              number: '5551112222'
+        - id: '32414268188027656'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-16T08:30:00Z'
+          updated_at: '2024-01-16T08:30:00Z'
+          attributes:
+            name:
+              first_name: Bob
+              last_name: Wilson
+            email_addresses:
+            - bob@startup.io
+            job_title: Founder
+            location:
+              city: San Francisco
+              region: CA
+              country: US
+        limit: 50
+        offset: 0
+        total: 247
+    developer.AttributeDefinitionResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        options:
+          $ref: '#/components/schemas/developer.AttributeOptionsResponse'
+        slug:
+          type: string
+        type:
+          type: string
+    developer.CreateListRequest:
+      type: object
+      required:
+      - name
+      - slug
+      properties:
+        name:
+          type: string
+          description: List display name
+        name_plural:
+          type: string
+          description: Plural name
+        slug:
+          type: string
+          description: URL-safe identifier
+        description:
+          type: string
+          description: List description
+      example:
+        name: VIP Contacts
+        slug: vip-contacts
+        description: High-value contacts
+    developer.SortParam:
+      type: object
+      properties:
+        attribute:
+          description: attribute slug or ID
+          type: string
+        direction:
+          description: '"asc" or "desc"'
+          type: string
+    developer.ObjectResponse:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        created_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        name_plural:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
+    developer.CreateListMemberRequest:
+      type: object
+      properties:
+        attributes:
+          description: Optional list-specific attributes
+          type: object
+          additionalProperties: {}
+        parent_id:
+          description: ID of the existing record to add to the list
+          type: string
+      example:
+        parent_id: '32417546405832961'
+        attributes:
+          source: website
+          status: new
+          score: 85
+          notes: Qualified lead from demo request
+    developer.AttributesParam:
+      oneOf:
+      - type: string
+        enum:
+        - all
+        - primary
+        - none
+        description: Simple string values for common attribute sets
+      - type: object
+        properties:
+          mode:
+            type: string
+            enum:
+            - custom
+            description: Must be 'custom' when using object format
+          slugs:
+            type: array
+            items:
+              type: string
+            description: Array of attribute slugs to include
+            minItems: 1
+        required:
+        - mode
+        - slugs
+        description: Object format for custom attribute selection
+      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
+    developer.CreateListMemberResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32417546405832962'
+        object_id: '32417546405832950'
+        type: person
+        workspace_id: '32417546405832945'
+        created_at: '2024-01-20T16:45:00Z'
+        updated_at: '2024-01-20T16:45:00Z'
+        attributes:
+          name:
+            first_name: Sarah
+            last_name: Chen
+          email_addresses:
+          - sarah@newstartup.com
+          job_title: VP Engineering
+          source: website
+          status: new
+          score: 85
+          notes: Qualified lead from demo request
+    developer.SelectOptionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    developer.ListObjectsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.ObjectResponse'
+      example:
+        data:
+        - id: '123'
+          slug: person
+          name: Person
+          name_plural: People
+          type: person
+          description: ''
+          created_at: '2024-01-01T00:00:00Z'
+          attributes:
+          - id: '456'
+            slug: name
+            type: full_name
+            name: Name
+            description: ''
+            options:
+              is_multi_value: false
+              is_required: true
+              is_unique: false
+          - id: '789'
+            slug: email_addresses
+            type: email
+            name: Email Addresses
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: true
+        - id: '456'
+          slug: company
+          name: Company
+          name_plural: Companies
+          type: company
+          description: ''
+          created_at: '2024-01-01T00:00:00Z'
+          attributes:
+          - id: '987'
+            slug: name
+            type: text
+            name: Name
+            description: ''
+            options:
+              is_multi_value: false
+              is_required: true
+              is_unique: false
+          - id: '654'
+            slug: domains
+            type: domain
+            name: Domains
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: true
+          - id: '321'
+            slug: industries
+            type: select
+            name: Industries
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: false
+              select_options:
+              - id: tech
+                name: Technology
+              - id: finance
+                name: Financial Services
+              - id: healthcare
+                name: Healthcare
+              - id: retail
+                name: Retail
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

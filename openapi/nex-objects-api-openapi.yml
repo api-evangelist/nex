@@ -1,0 +1,205 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Objects API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Objects
+paths:
+  /v1/objects:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves all entity definitions (objects) available in the workspace
+      tags:
+      - Objects
+      summary: List all objects in the workspace
+      parameters:
+      - description: Include attribute definitions for each object
+        name: include_attributes
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: List of objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListObjectsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: listObjects
+components:
+  schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.AttributeDefinitionResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        options:
+          $ref: '#/components/schemas/developer.AttributeOptionsResponse'
+        slug:
+          type: string
+        type:
+          type: string
+    developer.ObjectResponse:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        created_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        name_plural:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
+    developer.SelectOptionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    developer.ListObjectsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.ObjectResponse'
+      example:
+        data:
+        - id: '123'
+          slug: person
+          name: Person
+          name_plural: People
+          type: person
+          description: ''
+          created_at: '2024-01-01T00:00:00Z'
+          attributes:
+          - id: '456'
+            slug: name
+            type: full_name
+            name: Name
+            description: ''
+            options:
+              is_multi_value: false
+              is_required: true
+              is_unique: false
+          - id: '789'
+            slug: email_addresses
+            type: email
+            name: Email Addresses
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: true
+        - id: '456'
+          slug: company
+          name: Company
+          name_plural: Companies
+          type: company
+          description: ''
+          created_at: '2024-01-01T00:00:00Z'
+          attributes:
+          - id: '987'
+            slug: name
+            type: text
+            name: Name
+            description: ''
+            options:
+              is_multi_value: false
+              is_required: true
+              is_unique: false
+          - id: '654'
+            slug: domains
+            type: domain
+            name: Domains
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: true
+          - id: '321'
+            slug: industries
+            type: select
+            name: Industries
+            description: ''
+            options:
+              is_multi_value: true
+              is_required: false
+              is_unique: false
+              select_options:
+              - id: tech
+                name: Technology
+              - id: finance
+                name: Financial Services
+              - id: healthcare
+                name: Healthcare
+              - id: retail
+                name: Retail
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

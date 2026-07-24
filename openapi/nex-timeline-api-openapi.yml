@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Timeline API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Timeline
+paths:
+  /v1/records/{record_id}/timeline:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves the activity timeline for a specific record, including tasks, notes, attribute changes, and relationship events. Supports cursor-based pagination.
+      tags:
+      - Timeline
+      summary: Get record timeline
+      operationId: getRecordTimeline
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - description: 'Max events to return (1-100, default: 50)'
+        name: limit
+        in: query
+        schema:
+          type: integer
+      - description: Pagination cursor from previous response
+        name: cursor
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Timeline events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.TimelineResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.TimelineTaskPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        priority:
+          type: string
+        completed_at:
+          type: string
+          format: date-time
+    developer.TimelineResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.TimelineEventResponse'
+        has_next_page:
+          type: boolean
+        next_cursor:
+          type: string
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.TimelineEventResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        resource_type:
+          type: string
+          description: Type of resource
+          enum:
+          - entity
+          - task
+          - note
+          - list_item
+          - attribute
+        resource_id:
+          type: string
+        event_type:
+          type: string
+          description: Type of event
+          enum:
+          - created
+          - updated
+          - deleted
+          - archived
+        event_payload:
+          $ref: '#/components/schemas/developer.TimelineEventPayloadResponse'
+        event_timestamp:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+        created_by_id:
+          type: string
+        is_aggregated:
+          type: boolean
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.TimelineEventResponse'
+      example:
+        id: '5000'
+        resource_type: task
+        resource_id: '800'
+        event_type: created
+        event_payload:
+          task:
+            id: '800'
+            title: Follow up
+            priority: high
+        event_timestamp: '2024-01-15T10:00:00Z'
+        created_by: developer_api
+        created_by_id: '42'
+        is_aggregated: false
+        children: []
+    developer.TimelineAttributePayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        value: {}
+        plain_text:
+          type: string
+    developer.FieldChangeResponse:
+      type: object
+      properties:
+        field_name:
+          type: string
+        old_value: {}
+        new_value: {}
+    developer.TimelineEventPayloadResponse:
+      type: object
+      description: Only the relevant field is populated based on resource_type
+      properties:
+        task:
+          $ref: '#/components/schemas/developer.TimelineTaskPayload'
+        note:
+          $ref: '#/components/schemas/developer.TimelineNotePayload'
+        entity:
+          $ref: '#/components/schemas/developer.TimelineEntityPayload'
+        list_item:
+          $ref: '#/components/schemas/developer.TimelineListItemPayload'
+        attribute:
+          $ref: '#/components/schemas/developer.TimelineAttributePayload'
+        field_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.FieldChangeResponse'
+    developer.TimelineListItemPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        list_name:
+          type: string
+        parent_id:
+          type: string
+    developer.TimelineNotePayload:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+    developer.TimelineEntityPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: {}
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

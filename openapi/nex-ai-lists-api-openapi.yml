@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: AI Lists
+paths:
+  /v1/context/list/jobs:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Create an AI-powered list generation job. The AI will search your workspace and generate a list of records matching your natural language query. Use the returned job_id to poll for results.
+      tags:
+      - AI Lists
+      summary: Create an AI List
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateAIListJobRequest'
+        description: AI list generation parameters
+        required: true
+      responses:
+        '200':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.CreateAIListJobResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: createAIListJob
+  /v1/context/list/jobs/{job_id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Get the status and results of an AI list generation job. Poll this endpoint until the job status is 'completed' or 'failed'.
+      tags:
+      - AI Lists
+      summary: Get AI list job status and results
+      parameters:
+      - description: Job ID returned from create job endpoint
+        name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Include full attributes for each record in the results
+        name: include_attributes
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Job status and results (if completed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.GetAIListJobResponse'
+        '400':
+          description: Bad request - Invalid job ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: getAIListJob
+components:
+  schemas:
+    developer.GetAIListJobResponse:
+      type: object
+      properties:
+        message:
+          type: object
+          description: Response wrapper
+          properties:
+            job_id:
+              type: string
+              description: The job identifier
+            status:
+              type: string
+              enum:
+              - pending
+              - processing
+              - completed
+              - failed
+              description: Current job status
+            created_at:
+              type: string
+              description: ISO 8601 timestamp when job was created
+            entities:
+              type: array
+              description: Array of matched entities (only when status is 'completed')
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Entity identifier
+                  name:
+                    type: string
+                    description: Entity primary attribute (contact name or company name)
+                  type:
+                    type: string
+                    description: Entity type ('contact' or 'company')
+                  reason:
+                    type: string
+                    description: LLM-generated explanation of why this entity matched
+                  highlights:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of relevant insight snippets (up to 3)
+                  attributes:
+                    type: object
+                    description: Object with all attribute values (if include_attributes was true)
+            count:
+              type: integer
+              description: Number of entities returned (only when status is 'completed')
+            query_interpretation:
+              type: string
+              description: AI-generated explanation of how the query was interpreted
+            error:
+              type: string
+              description: Error message (only when status is 'failed')
+      example:
+        message:
+          job_id: '12345678901234567'
+          status: completed
+          created_at: '2024-01-15T10:30:00Z'
+          count: 2
+          query_interpretation: Finding all venture capital firms in the workspace
+          entities:
+          - id: '32710180831586564'
+            name: Sequoia Capital
+            type: company
+            reason: Sequoia Capital is a well-known venture capital firm
+            highlights:
+            - Invested in multiple portfolio companies
+            - Active in Series A and B funding rounds
+            attributes:
+              domains:
+              - sequoiacap.com
+              industries:
+              - Venture Capital
+          - id: '32710180831586565'
+            name: Andreessen Horowitz
+            type: company
+            reason: a16z is a prominent venture capital firm
+            highlights:
+            - Focus on technology investments
+    developer.CreateAIListJobRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query to search items (e.g., 'all companies', 'high priority contacts')
+        object_type:
+          type: string
+          description: 'Type of object to search - ''contact'' or ''company'' (default: ''contact'')'
+        limit:
+          type: integer
+          description: 'Number of results (default: 50, max: 100)'
+          default: 50
+        include_attributes:
+          type: boolean
+          description: 'If true, includes all entity attribute values in response (default: false)'
+          default: false
+      example:
+        query: all companies who have asked for a contract
+        object_type: company
+        limit: 20
+        include_attributes: true
+    developer.CreateAIListJobResponse:
+      type: object
+      properties:
+        message:
+          type: object
+          description: Response wrapper
+          properties:
+            job_id:
+              type: string
+              description: Unique identifier for the list generation job
+            status:
+              type: string
+              enum:
+              - pending
+              description: Initial job status (always 'pending')
+      example:
+        message:
+          job_id: '12345678901234567'
+          status: pending
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

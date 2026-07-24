@@ -1,0 +1,349 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Relationships API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Relationships
+paths:
+  /v1/relationships:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new relationship definition between two object types
+      tags:
+      - Relationships
+      summary: Create a relationship definition
+      operationId: createRelationshipDefinition
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateRelationshipDefinitionRequest'
+        description: Relationship definition to create
+        required: true
+      responses:
+        '200':
+          description: Created relationship definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves all relationship definitions in the workspace
+      tags:
+      - Relationships
+      summary: List relationship definitions
+      operationId: listRelationshipDefinitions
+      responses:
+        '200':
+          description: List of relationship definitions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListRelationshipDefinitionsResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/relationships/{id}:
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Permanently deletes a relationship definition
+      tags:
+      - Relationships
+      summary: Delete a relationship definition
+      operationId: deleteRelationshipDefinition
+      parameters:
+      - description: Relationship definition ID
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Relationship definition deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Relationship definition not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/records/{record_id}/relationships:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a relationship instance between two records
+      tags:
+      - Relationships
+      summary: Create a relationship instance
+      operationId: createRelationshipInstance
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateRelationshipRequest'
+        description: Relationship instance to create
+        required: true
+      responses:
+        '200':
+          description: Created relationship instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.RelationshipInstanceResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/records/{record_id}/relationships/{rel_id}:
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Deletes a relationship instance between two records
+      tags:
+      - Relationships
+      summary: Delete a relationship instance
+      operationId: deleteRelationshipInstance
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - description: Relationship instance ID
+        name: rel_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Relationship instance deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Relationship instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.RelationshipInstanceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        entity_1_id:
+          type: string
+        entity_2_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      example:
+        id: '5001'
+        definition_id: '789'
+        entity_1_id: '1001'
+        entity_2_id: '2002'
+        created_at: '2024-01-15T10:00:00Z'
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.CreateRelationshipRequest:
+      type: object
+      required:
+      - definition_id
+      - entity_1_id
+      - entity_2_id
+      properties:
+        definition_id:
+          type: string
+          description: Relationship definition ID
+        entity_1_id:
+          type: string
+          description: First record ID
+        entity_2_id:
+          type: string
+          description: Second record ID
+      example:
+        definition_id: '789'
+        entity_1_id: '1001'
+        entity_2_id: '2002'
+    developer.RelationshipDefinitionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - one_to_one
+          - one_to_many
+          - many_to_many
+        entity_definition_1_id:
+          type: string
+        entity_definition_2_id:
+          type: string
+        entity_1_to_2_predicate:
+          type: string
+        entity_2_to_1_predicate:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      example:
+        id: '789'
+        type: one_to_many
+        entity_definition_1_id: '123'
+        entity_definition_2_id: '456'
+        entity_1_to_2_predicate: has
+        entity_2_to_1_predicate: belongs to
+        created_at: '2024-01-15T10:00:00Z'
+    developer.CreateRelationshipDefinitionRequest:
+      type: object
+      required:
+      - type
+      - entity_definition_1_id
+      - entity_definition_2_id
+      properties:
+        type:
+          type: string
+          description: Relationship cardinality
+          enum:
+          - one_to_one
+          - one_to_many
+          - many_to_many
+        entity_definition_1_id:
+          type: string
+          description: First object definition ID
+        entity_definition_2_id:
+          type: string
+          description: Second object definition ID
+        entity_1_to_2_predicate:
+          type: string
+          description: Label for 1→2 direction (e.g., 'has')
+        entity_2_to_1_predicate:
+          type: string
+          description: Label for 2→1 direction (e.g., 'belongs to')
+      example:
+        type: one_to_many
+        entity_definition_1_id: '123'
+        entity_definition_2_id: '456'
+        entity_1_to_2_predicate: has
+        entity_2_to_1_predicate: belongs to
+    developer.ListRelationshipDefinitionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

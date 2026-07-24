@@ -1,0 +1,381 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Context API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Context
+paths:
+  /v1/context/text:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Add arbitrary context through unstructured text. This endpoint allows you to provide contextual information about (new or existing) people or companies. Returns an artifact_id that can be used to retrieve the processing results via GET /v1/context/artifacts/{artifact_id}.
+      tags:
+      - Context
+      summary: Add context to workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.AddContextTextRequest'
+        description: Context text to add
+        required: true
+      responses:
+        '200':
+          description: Context processing initiated, returns artifact_id for retrieving results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.AddContextTextResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: addContext
+  /v1/context/ask:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: 'Query information using natural language. This enhanced endpoint supports three types of queries: (1) questions about specific entities (people, companies), (2) questions about multiple entities at once, and (3) generic workspace-level questions that don''t reference specific entities. The AI will analyze your workspace context to provide relevant answers.'
+      tags:
+      - Context
+      summary: Ask AI a question
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.QueryContextRequest'
+        description: Natural language query - can be about specific entities, multiple entities, or general workspace questions
+        required: true
+      responses:
+        '200':
+          description: Query response with relevant information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.QueryContextResponse'
+        '400':
+          description: Bad request - Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: queryContext
+  /v1/context/artifacts/{artifact_id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieve the results of a previously submitted ProcessText request using the artifact ID returned from the POST /v1/context/text endpoint.
+      tags:
+      - Context
+      summary: Retrieve context artifact status
+      parameters:
+      - description: Artifact ID returned from ProcessText
+        name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Artifact details with processing results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.GetArtifactResponse'
+        '400':
+          description: Bad request - Invalid artifact ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Artifact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: getArtifact
+components:
+  schemas:
+    developer.AddContextTextRequest:
+      type: object
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          description: The unstructured text containing context information about people, companies, or other entities
+        context:
+          type: string
+          description: Optional additional context about the content (e.g., source, type of activity)
+      example:
+        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
+        context: New LinkedIn activity
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.QueryContextResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: AI-generated response to the query based on available workspace context
+        entities_considered:
+          type: array
+          description: Entities that were analyzed to generate the answer
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Entity ID
+              name:
+                type: string
+                description: Entity name
+              type:
+                type: string
+                description: Entity type (PERSON, COMPANY)
+              reason:
+                type: string
+                description: Why this entity was considered relevant
+              insights_matched:
+                type: integer
+                description: Number of insights matched for this entity
+              score:
+                type: number
+                description: Relevance score
+        signals_used:
+          type: array
+          description: Specific signals/insights used to generate the answer
+          items:
+            type: object
+            properties:
+              insight_id:
+                type: integer
+                description: Insight ID
+              entity_id:
+                type: integer
+                description: Entity ID this signal belongs to
+              content:
+                type: string
+                description: Signal content excerpt
+              score:
+                type: number
+                description: Relevance score
+              type:
+                type: string
+                description: Signal type
+        metadata:
+          type: object
+          description: Query processing metadata
+          properties:
+            query_type:
+              type: string
+              enum:
+              - workspace_wide
+              - entity_specific
+              description: Whether the query was about specific entities or workspace-wide
+            total_entities_searched:
+              type: integer
+              description: Total number of entities searched
+            confidence:
+              type: number
+              description: Confidence score of the answer
+      example:
+        answer: Based on the available context, techflow.io appears to be a technology company. Marcus Rodriguez from techflow.io expressed interest in booking a demo on LinkedIn.
+        entities_considered:
+        - id: 25339323448557880
+          name: TechFlow
+          type: COMPANY
+          reason: Direct match for techflow.io domain
+          insights_matched: 3
+          score: 0.95
+        - id: 25339323448557884
+          name: Marcus Rodriguez
+          type: PERSON
+          reason: Associated with TechFlow, recent LinkedIn activity
+          insights_matched: 2
+          score: 0.87
+        signals_used:
+        - insight_id: 38485049540083710
+          entity_id: 25339323448557884
+          content: 'Marcus Rodriguez commented on LinkedIn: Would love to book a demo'
+          score: 0.92
+          type: social_activity
+        - insight_id: 38485049540083710
+          entity_id: 25339323448557880
+          content: TechFlow is a SaaS platform for workflow automation
+          score: 0.88
+          type: company_info
+        metadata:
+          query_type: entity_specific
+          total_entities_searched: 156
+          confidence: 0.89
+    developer.QueryContextRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
+      example:
+        query: What's the status with techflow.io?
+    developer.AddContextTextResponse:
+      type: object
+      properties:
+        artifact_id:
+          type: integer
+          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
+      example:
+        artifact_id: 32710180831586560
+    developer.GetArtifactResponse:
+      type: object
+      properties:
+        operation_id:
+          type: integer
+          description: Unique identifier for the processing operation
+        status:
+          type: string
+          enum:
+          - unknown
+          - pending
+          - processing
+          - completed
+          - failed
+          description: Current operation status
+        result:
+          type: object
+          description: Processing results (when status is 'completed')
+          properties:
+            entities_extracted:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Entity type (PERSON, COMPANY, ENGAGEMENT)
+                  context_id:
+                    type: integer
+                    description: Internal context ID
+                  canonical_entity_id:
+                    type: integer
+                    description: Entity ID (if linked)
+                  properties:
+                    type: object
+                    description: Entity properties (name, email, job_title, domain, etc.)
+                  previous_properties:
+                    type: object
+                    description: Properties before this operation (for updates)
+                  is_new:
+                    type: boolean
+                    description: Whether entity was created in this operation
+              description: Array of extracted entities with details
+            entities_created:
+              type: integer
+              description: Number of new entities created
+            entities_updated:
+              type: integer
+              description: Number of existing entities updated
+            relationships_created:
+              type: integer
+              description: Number of relationships established
+            insights_created:
+              type: integer
+              description: Number of insights generated
+            tasks_suggested:
+              type: integer
+              description: Number of tasks suggested
+        error:
+          type: string
+          description: Error message if status is 'failed'
+        created_at:
+          type: string
+          description: Operation creation timestamp
+        completed_at:
+          type: string
+          description: Operation completion timestamp
+      example:
+        operation_id: 48066188026052610
+        status: completed
+        created_at: '2025-11-28T14:14:40Z'
+        completed_at: '2025-11-28T14:14:41Z'
+        result:
+          entities_extracted:
+          - type: COMPANY
+            context_id: 38485049540083710
+            canonical_entity_id: 25339323448557880
+            properties:
+              name: Adobe
+              domain: adobe.com
+            previous_properties:
+              name: Adobe
+              domain: null
+            is_new: false
+          - type: PERSON
+            context_id: 38485049540083710
+            canonical_entity_id: 25339323448557884
+            properties:
+              name: John Smith
+              email: john.smith@adobe.com
+              job_title: Product Manager
+            is_new: true
+          entities_created: 1
+          entities_updated: 1
+          relationships_created: 1
+          insights_created: 3
+          tasks_suggested: 0
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

@@ -1,0 +1,681 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Records API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Records
+paths:
+  /v1/objects/{slug}:
+    put:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new record or updates an existing one based on a matching attribute
+      tags:
+      - Records
+      summary: Create or update a record
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpsertRecordRequest'
+        description: Upsert record request with matching attribute and data
+        required: true
+      responses:
+        '200':
+          description: Created or updated record with all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.UpsertRecordResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object type not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: upsertRecord
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new record for a specific object type with the provided attributes
+      tags:
+      - Records
+      summary: Create a new record
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateRecordRequest'
+        description: Record attributes
+        required: true
+      responses:
+        '200':
+          description: Created record with all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.CreateRecordResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object type not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: createRecord
+  /v1/objects/{slug}/records:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves records (entities) for a specific object type with pagination and optional filtering
+      tags:
+      - Records
+      summary: List records for a specific object type
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.ListRecordsRequest'
+        description: List records request with pagination and filtering options
+        required: true
+      responses:
+        '200':
+          description: List of records with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListRecordsResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: listRecords
+  /v1/records/{record_id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves a single record with all its attributes
+      tags:
+      - Records
+      summary: Get a specific record by ID
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Record details with attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.RecordResponse'
+        '400':
+          description: Bad request - Invalid record ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: getRecord
+    patch:
+      security:
+      - ApiKeyAuth: []
+      description: Updates specific attributes of an existing record
+      tags:
+      - Records
+      summary: Update an existing record
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpdateRecordRequest'
+        description: Attributes to update
+        required: true
+      responses:
+        '200':
+          description: Updated record with all attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.UpdateRecordResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+      operationId: updateRecord
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Permanently deletes a record and all its associated data
+      tags:
+      - Records
+      summary: Delete a record
+      operationId: deleteRecord
+      parameters:
+      - description: Record ID
+        name: record_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Record deleted
+        '400':
+          description: Bad request - Invalid record ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.UpdateRecordRequest:
+      type: object
+      properties:
+        attributes:
+          description: Attributes to update
+          type: object
+          additionalProperties: {}
+      example:
+        attributes:
+          job_title: Senior Engineer
+          location:
+            city: Boston
+            region: MA
+            country: US
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+    developer.CreateRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32710180831586561'
+        object_id: '32710180831586560'
+        type: person
+        workspace_id: '32710180831586559'
+        created_at: '2024-01-15T10:30:00Z'
+        updated_at: '2024-01-15T10:30:00Z'
+        attributes:
+          name:
+            first_name: John
+            last_name: Doe
+          email_addresses:
+          - john@example.com
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+          job_title: Software Engineer
+          location:
+            street: 123 Main St
+            city: Boston
+            region: MA
+            postal_code: '02134'
+            country: US
+    developer.RecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027655'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-15T14:20:00Z'
+        updated_at: '2024-01-20T09:15:00Z'
+        attributes:
+          name:
+            first_name: Alice
+            last_name: Johnson
+          email_addresses:
+          - alice@techcorp.com
+          job_title: Product Manager
+          phone_number:
+            country_code: 1
+            number: '5551112222'
+          location:
+            street: 456 Innovation Dr
+            city: Austin
+            region: TX
+            postal_code: '73301'
+            country: US
+          linkedin:
+            username: alicejohnson
+            url: https://linkedin.com/in/alicejohnson
+    developer.ListRecordsRequest:
+      type: object
+      properties:
+        attributes:
+          $ref: '#/components/schemas/developer.AttributesParam'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/developer.SortParam'
+      example:
+        attributes: all
+        limit: 50
+        offset: 0
+        sort:
+          attribute: name
+          direction: asc
+    developer.SortParam:
+      type: object
+      properties:
+        attribute:
+          description: attribute slug or ID
+          type: string
+        direction:
+          description: '"asc" or "desc"'
+          type: string
+    developer.ListRecordsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RecordResponse'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+      example:
+        data:
+        - id: '32414268188027655'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-15T14:20:00Z'
+          updated_at: '2024-01-20T09:15:00Z'
+          attributes:
+            name:
+              first_name: Alice
+              last_name: Johnson
+            email_addresses:
+            - alice@techcorp.com
+            job_title: Product Manager
+            phone_number:
+              country_code: 1
+              number: '5551112222'
+        - id: '32414268188027656'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-16T08:30:00Z'
+          updated_at: '2024-01-16T08:30:00Z'
+          attributes:
+            name:
+              first_name: Bob
+              last_name: Wilson
+            email_addresses:
+            - bob@startup.io
+            job_title: Founder
+            location:
+              city: San Francisco
+              region: CA
+              country: US
+        limit: 50
+        offset: 0
+        total: 247
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.CreateRecordRequest:
+      type: object
+      required:
+      - attributes
+      properties:
+        attributes:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              description: 'Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
+              oneOf:
+              - type: string
+              - type: object
+                additionalProperties: {}
+          additionalProperties: {}
+      example:
+        attributes:
+          name:
+            first_name: John
+            last_name: Doe
+          name (alternative): John Doe
+          email_addresses:
+          - john@example.com
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+          job_title: Software Engineer
+          location:
+            street: 123 Main St
+            city: Boston
+            region: MA
+            postal_code: '02134'
+            country: US
+    developer.UpsertRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027657'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-21T12:00:00Z'
+        updated_at: '2024-01-21T12:00:00Z'
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+          location:
+            city: San Francisco
+            region: CA
+            country: US
+    developer.UpsertRecordRequest:
+      type: object
+      required:
+      - attributes
+      - matching_attribute
+      properties:
+        attributes:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              description: 'Required when creating a new record, but optional when updating an existing record that already has a name. Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
+              oneOf:
+              - type: string
+              - type: object
+                additionalProperties: {}
+          additionalProperties: {}
+        matching_attribute:
+          description: ID or slug of the attribute to match on
+          type: string
+      example:
+        matching_attribute: email_addresses
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+    developer.UpdateRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027655'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-15T14:20:00Z'
+        updated_at: '2024-01-21T11:45:00Z'
+        attributes:
+          name:
+            first_name: John
+            last_name: Doe
+          email_addresses:
+          - john@example.com
+          job_title: Senior Engineer
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+          location:
+            city: Boston
+            region: MA
+            country: US
+    developer.AttributesParam:
+      oneOf:
+      - type: string
+        enum:
+        - all
+        - primary
+        - none
+        description: Simple string values for common attribute sets
+      - type: object
+        properties:
+          mode:
+            type: string
+            enum:
+            - custom
+            description: Must be 'custom' when using object format
+          slugs:
+            type: array
+            items:
+              type: string
+            description: Array of attribute slugs to include
+            minItems: 1
+        required:
+        - mode
+        - slugs
+        description: Object format for custom attribute selection
+      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

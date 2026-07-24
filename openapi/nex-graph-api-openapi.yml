@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Graph API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Graph
+paths:
+  /v1/graph:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: 'Returns the full knowledge graph for the workspace, including CRM entity nodes, relationship edges, context edges (from ingested text), insight triplet edges (AI-extracted subject-predicate-object relationships), insight nodes, and insight link edges (semantic relationships between insights). Supports an optional `limit` query parameter to control the maximum number of entity nodes returned (default 1000, max 5000). Set `Accept: text/html` or `?format=html` to receive an interactive visualization.'
+      tags:
+      - Graph
+      summary: Get knowledge graph
+      operationId: getGraph
+      parameters:
+      - description: Maximum number of entity nodes to return
+        name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1000
+          maximum: 5000
+          minimum: 1
+      - description: Response format. Use `html` to receive an interactive graph visualization instead of JSON.
+        name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - html
+      responses:
+        '200':
+          description: Knowledge graph data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/graph.GraphResponse'
+            text/html:
+              schema:
+                type: string
+                description: Interactive HTML visualization of the knowledge graph
+        '400':
+          description: Bad request - Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    graph.GraphNode:
+      type: object
+      description: A node in the knowledge graph representing a CRM entity or a ghost (unresolved) entity
+      properties:
+        id:
+          type: string
+          description: Node ID. CRM entities use numeric IDs (e.g., "12345"). Ghost nodes use the format "ghost:<context_id>".
+          example: '12345'
+        name:
+          type: string
+          description: Display name (primary attribute value, or a generated name for unnamed entities)
+          example: John Smith
+        type:
+          type: string
+          description: Entity type name (e.g., "person", "company", "ghost")
+          example: person
+        definition_slug:
+          type: string
+          description: Slug of the entity definition
+          example: person
+        primary_attribute:
+          type: string
+          description: Value of the entity's primary attribute
+        created_at:
+          type: string
+          format: date-time
+          description: When the entity was created
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    graph.GraphResponse:
+      type: object
+      description: Complete knowledge graph for the workspace
+      properties:
+        nodes:
+          type: array
+          description: CRM entity nodes (people, companies, custom objects) and ghost nodes (entities mentioned in context but not yet resolved to a CRM record)
+          items:
+            $ref: '#/components/schemas/graph.GraphNode'
+        edges:
+          type: array
+          description: CRM relationship edges between entity nodes (e.g., person works_at company)
+          items:
+            $ref: '#/components/schemas/graph.GraphEdge'
+        relationship_definitions:
+          type: array
+          description: Definitions of relationship types in the workspace
+          items:
+            $ref: '#/components/schemas/graph.GraphRelationshipDefinition'
+        context_edges:
+          type: array
+          description: Edges derived from ingested context, AI-extracted triplets, insight-entity links, and insight-to-insight semantic relationships. Each edge has an `edge_type` indicating its source.
+          items:
+            $ref: '#/components/schemas/graph.ContextEdge'
+        insight_nodes:
+          type: array
+          description: Insight nodes representing AI-extracted knowledge (entity insights and workspace-level knowledge insights)
+          items:
+            $ref: '#/components/schemas/graph.InsightNode'
+        insights:
+          type: object
+          description: Per-entity insight summaries, keyed by entity ID
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/graph.EntityInsightSummary'
+        total_nodes:
+          type: integer
+          description: Total number of entity nodes in the workspace (may exceed the returned count due to the limit parameter)
+        total_edges:
+          type: integer
+          description: Total number of CRM relationship edges in the workspace
+        total_context_edges:
+          type: integer
+          description: Total number of context edges returned (includes all edge types)
+    graph.GraphEdge:
+      type: object
+      description: A CRM relationship edge between two entity nodes
+      properties:
+        id:
+          type: string
+          description: Edge ID
+        source:
+          type: string
+          description: Source node ID
+        target:
+          type: string
+          description: Target node ID
+        label:
+          type: string
+          description: Relationship label (e.g., "works_at", "reports_to")
+          example: works_at
+        definition_id:
+          type: string
+          description: ID of the relationship definition
+    graph.EntityInsightSummary:
+      type: object
+      description: Summary of an insight associated with a specific entity
+      properties:
+        content:
+          type: string
+          description: The insight text content
+        confidence:
+          type: number
+          format: double
+          description: Confidence score (0-1)
+          minimum: 0
+          maximum: 1
+        type:
+          type: string
+          description: Insight type
+    graph.GraphRelationshipDefinition:
+      type: object
+      description: Definition of a relationship type
+      properties:
+        id:
+          type: string
+          description: Definition ID
+        name:
+          type: string
+          description: Display name
+        entity_1_to_2:
+          type: string
+          description: Label from entity 1 to entity 2 (e.g., "works_at")
+        entity_2_to_1:
+          type: string
+          description: Inverse label from entity 2 to entity 1 (e.g., "employs")
+    graph.InsightNode:
+      type: object
+      description: An insight node representing AI-extracted knowledge
+      properties:
+        id:
+          type: string
+          description: Insight node ID. Entity insights use "ei:<id>", knowledge insights use "ki:<id>".
+          example: ei:42
+        content:
+          type: string
+          description: The insight text content
+          example: John prefers email communication over phone calls
+        type:
+          type: string
+          description: Insight type (e.g., "preference", "behavior", "fact")
+          example: preference
+        confidence:
+          type: number
+          format: double
+          description: Confidence score (0-1)
+          minimum: 0
+          maximum: 1
+        source:
+          type: string
+          description: 'Source type: "entity_insight" (scoped to an entity) or "knowledge_insight" (workspace-level)'
+          enum:
+          - entity_insight
+          - knowledge_insight
+    graph.ContextEdge:
+      type: object
+      description: 'An edge in the context/knowledge layer of the graph. The `edge_type` field indicates the source: "context" (from ingested text), "triplet" (AI-extracted subject-predicate-object), "insight" (linking an insight node to an entity), or "insight_link" (semantic relationship between two insight nodes).'
+      properties:
+        id:
+          type: string
+          description: 'Edge ID. Prefixed by type: "ctx_" for context, "tri_" for triplet, "ei_edge_" for entity insight edges, and "il_" for insight_link edges.'
+          example: tri_42
+        source:
+          type: string
+          description: Source node ID. Can be an entity ID, ghost ID ("ghost:123"), or insight node ID ("ei:123" or "ki:123").
+          example: '12345'
+        target:
+          type: string
+          description: Target node ID
+          example: '67890'
+        label:
+          type: string
+          description: 'Edge label. For context edges: the relationship type. For triplets: the predicate (e.g., "works_with"). For insight edges: the insight type. For insight_link edges: "related_to" or "contradicts".'
+          example: works_with
+        edge_type:
+          type: string
+          description: Source type of the edge
+          enum:
+          - context
+          - triplet
+          - insight
+          - insight_link
+        confidence:
+          type: number
+          format: double
+          description: Confidence score (0-1). Present on triplet edges (extraction confidence) and insight_link edges (similarity score). Null/absent for context and insight edges.
+          nullable: true
+          minimum: 0
+          maximum: 1
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

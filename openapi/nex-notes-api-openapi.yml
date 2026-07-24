@@ -1,0 +1,314 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Notes API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Notes
+paths:
+  /v1/notes:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new note, optionally associated with a record
+      tags:
+      - Notes
+      summary: Create a note
+      operationId: createNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateNoteRequest'
+        description: Note to create
+        required: true
+      responses:
+        '200':
+          description: Created note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.NoteResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves notes with optional filtering by associated record. Response capped at 200 notes.
+      tags:
+      - Notes
+      summary: List notes
+      operationId: listNotes
+      parameters:
+      - description: Filter by associated record ID
+        name: entity_id
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ListNotesResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/notes/{note_id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves a single note by ID
+      tags:
+      - Notes
+      summary: Get a note
+      operationId: getNote
+      parameters:
+      - description: Note ID
+        name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Note details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.NoteResponse'
+        '400':
+          description: Bad request - Invalid note ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    patch:
+      security:
+      - ApiKeyAuth: []
+      description: Updates properties of an existing note. All fields are optional.
+      tags:
+      - Notes
+      summary: Update a note
+      operationId: updateNote
+      parameters:
+      - description: Note ID
+        name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpdateNoteRequest'
+        description: Fields to update
+        required: true
+      responses:
+        '200':
+          description: Updated note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.NoteResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Archives (soft-deletes) a note. The note will have an archived_at timestamp set.
+      tags:
+      - Notes
+      summary: Delete a note
+      operationId: deleteNote
+      parameters:
+      - description: Note ID
+        name: note_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Note archived
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.ListNotesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.NoteResponse'
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.NoteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        entity_id:
+          type: string
+        created_by:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        archived_at:
+          type: string
+          format: date-time
+      example:
+        id: '900'
+        title: Meeting notes
+        content: Discussed Q3 roadmap...
+        entity_id: '1001'
+        created_by: developer_api
+        created_at: '2024-01-15T10:00:00Z'
+    developer.CreateNoteRequest:
+      type: object
+      required:
+      - title
+      properties:
+        title:
+          type: string
+          description: Note title (non-empty)
+        content:
+          type: string
+          description: Note body text
+        entity_id:
+          type: string
+          description: Associated record ID
+      example:
+        title: Meeting notes
+        content: Discussed Q3 roadmap...
+        entity_id: '1001'
+    developer.UpdateNoteRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: New title
+        content:
+          type: string
+          description: New content
+        entity_id:
+          type: string
+          description: Change associated record
+      example:
+        title: Updated meeting notes
+        content: Added action items...
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header

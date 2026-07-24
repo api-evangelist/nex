@@ -1,0 +1,591 @@
+openapi: 3.0.0
+info:
+  description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
+  title: Nex Developer AI Lists Schema API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://app.nex.ai/api/developers
+tags:
+- name: Schema
+paths:
+  /v1/objects:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new object definition (entity type) in the workspace
+      tags:
+      - Schema
+      summary: Create an object definition
+      operationId: createObjectDefinition
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateObjectRequest'
+        description: Object definition to create
+        required: true
+      responses:
+        '200':
+          description: Created object definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ObjectResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/objects/{slug}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      description: Retrieves a single object definition with all its attribute definitions
+      tags:
+      - Schema
+      summary: Get an object definition
+      operationId: getObjectDefinition
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Object definition with attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ObjectResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    patch:
+      security:
+      - ApiKeyAuth: []
+      description: Updates properties of an existing object definition
+      tags:
+      - Schema
+      summary: Update an object definition
+      operationId: updateObjectDefinition
+      parameters:
+      - description: Object slug (e.g., 'person', 'company')
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpdateObjectRequest'
+        description: Fields to update
+        required: true
+      responses:
+        '200':
+          description: Updated object definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.ObjectResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Permanently deletes an object definition and all associated data
+      tags:
+      - Schema
+      summary: Delete an object definition
+      operationId: deleteObjectDefinition
+      parameters:
+      - description: Object slug
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Object definition deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/objects/{slug}/attributes:
+    post:
+      security:
+      - ApiKeyAuth: []
+      description: Creates a new attribute definition on an object type
+      tags:
+      - Schema
+      summary: Create an attribute definition
+      operationId: createAttributeDefinition
+      parameters:
+      - description: Object slug
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.CreateAttributeDefinitionRequest'
+        description: Attribute definition to create
+        required: true
+      responses:
+        '200':
+          description: Created attribute definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+  /v1/objects/{slug}/attributes/{attr_id}:
+    patch:
+      security:
+      - ApiKeyAuth: []
+      description: Updates properties of an existing attribute definition
+      tags:
+      - Schema
+      summary: Update an attribute definition
+      operationId: updateAttributeDefinition
+      parameters:
+      - description: Object slug
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Attribute definition ID
+        name: attr_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/developer.UpdateAttributeDefinitionRequest'
+        description: Fields to update
+        required: true
+      responses:
+        '200':
+          description: Updated attribute definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        '400':
+          description: Bad request - Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object or attribute not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+    delete:
+      security:
+      - ApiKeyAuth: []
+      description: Permanently deletes an attribute definition from an object type
+      tags:
+      - Schema
+      summary: Delete an attribute definition
+      operationId: deleteAttributeDefinition
+      parameters:
+      - description: Object slug
+        name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Attribute definition ID
+        name: attr_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Attribute definition deleted
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '404':
+          description: Object or attribute not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/httpx.APIError'
+components:
+  schemas:
+    developer.CreateSelectOptionRequest:
+      type: object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: Option ID (optional on create, auto-generated if omitted)
+        name:
+          type: string
+          description: Option display label
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.CreateAttributeDefinitionRequest:
+      type: object
+      required:
+      - name
+      - slug
+      - type
+      properties:
+        name:
+          type: string
+          description: Display name
+        slug:
+          type: string
+          description: URL-safe identifier
+        type:
+          type: string
+          description: Attribute value type
+          enum:
+          - text
+          - number
+          - email
+          - phone
+          - url
+          - date
+          - boolean
+          - currency
+          - location
+          - select
+          - social_profile
+          - domain
+          - full_name
+        description:
+          type: string
+          description: Description
+        options:
+          $ref: '#/components/schemas/developer.CreateAttributeOptionsRequest'
+      example:
+        name: Status
+        slug: status
+        type: select
+        description: Current status
+        options:
+          is_required: true
+          select_options:
+          - name: Open
+          - name: In Progress
+          - name: Done
+    developer.AttributeDefinitionResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        options:
+          $ref: '#/components/schemas/developer.AttributeOptionsResponse'
+        slug:
+          type: string
+        type:
+          type: string
+    developer.UpdateObjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New display name
+        name_plural:
+          type: string
+          description: New plural name
+        description:
+          type: string
+          description: New description
+      example:
+        name: Updated Project
+        description: Updated description
+    developer.ObjectResponse:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        created_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        name_plural:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
+    developer.UpdateAttributeOptionsRequest:
+      type: object
+      properties:
+        is_required:
+          type: boolean
+        use_raw_format:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
+          description: Updated select options. Include id to update existing, omit id to create new.
+    developer.UpdateAttributeDefinitionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New display name
+        description:
+          type: string
+          description: New description
+        options:
+          $ref: '#/components/schemas/developer.UpdateAttributeOptionsRequest'
+      example:
+        name: Updated Status
+        options:
+          is_required: false
+          select_options:
+          - id: existing-id
+            name: Renamed
+          - name: New Option
+    developer.CreateObjectRequest:
+      type: object
+      required:
+      - name
+      - slug
+      properties:
+        name:
+          type: string
+          description: Display name for the object
+        name_plural:
+          type: string
+          description: Plural display name
+        slug:
+          type: string
+          description: URL-safe identifier
+        description:
+          type: string
+          description: Description of the object type
+        type:
+          type: string
+          description: Object type
+          enum:
+          - person
+          - company
+          - custom
+          - deal
+      example:
+        name: Project
+        name_plural: Projects
+        slug: project
+        description: Project tracker
+        type: custom
+    developer.CreateAttributeOptionsRequest:
+      type: object
+      properties:
+        is_required:
+          type: boolean
+          description: Field is required
+        is_unique:
+          type: boolean
+          description: Value must be unique
+        is_multi_value:
+          type: boolean
+          description: Allow multiple values
+        use_raw_format:
+          type: boolean
+          description: Store raw format (numbers)
+        is_whole_number:
+          type: boolean
+          description: Number must be integer
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
+          description: Predefined choices for select fields
+    developer.SelectOptionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+      type: apiKey
+      name: Authorization
+      in: header
