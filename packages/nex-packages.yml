@@ -1,0 +1,29 @@
+generated: '2026-07-20'
+method: searched
+source: https://www.npmjs.com/package/@nex-ai/nex
+packages:
+- language: javascript
+  registry: npm
+  name: '@nex-ai/nex'
+  url: https://www.npmjs.com/package/@nex-ai/nex
+  install: npm install -g @nex-ai/nex
+  version: 0.2.14
+  official: true
+  kind: cli
+  description: >-
+    Nex CLI — organizational context & memory for AI agents. Bootstrap shim that
+    delegates to the nex-cli platform binary (MCP server).
+- language: ruby
+  registry: homebrew
+  name: nex-crm/tap/nex
+  url: https://github.com/nex-crm/homebrew-tap
+  install: brew install nex-crm/tap/nex
+  version: 0.1.10
+  official: true
+  kind: cli
+  description: Homebrew formula distributing the prebuilt `nex` CLI binary.
+note: >-
+  Nex publishes a first-party CLI (the `nex` MCP server binary) via npm and
+  Homebrew. No language-specific REST client SDK (Python/JS/Go/etc.) is published
+  for the Developer API as of this pass — integrations use the raw REST endpoints
+  at https://app.nex.ai/api/developers with Bearer API-key auth.

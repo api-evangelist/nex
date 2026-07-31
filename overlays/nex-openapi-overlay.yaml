@@ -1,0 +1,20 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Nex Developer API
+  version: 1.0.0
+extends: openapi/nex-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-20'
+    x-api-provider: Nex
+    x-product-category: AI context/memory layer for agents
+    x-not-a-crm: true
+    x-docs: https://docs.nex.ai
+- target: $.info
+  update:
+    x-auth-model: api-key-bearer
+    x-scopes-ref: scopes/nex-scopes.yml
+    x-error-envelope: '{ code, message }'
+    x-pagination: [offset, cursor]
+    x-mcp-server: mcp/nex-mcp.yml

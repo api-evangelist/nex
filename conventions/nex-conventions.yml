@@ -1,0 +1,48 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.nex.ai/api-reference/introduction
+authentication:
+  style: api-key
+  scheme: Bearer
+  header: Authorization
+  format: 'Authorization: Bearer sk-YOUR_API_KEY'
+  scopes_ref: scopes/nex-scopes.yml
+idempotency:
+  supported: false
+  note: >-
+    No idempotency-key header or parameter is documented. PUT upsert operations
+    (upsertRecord, upsertListMember) provide natural idempotency by key, but
+    there is no request-level idempotency contract.
+pagination:
+  styles:
+  - name: offset
+    used_by: [records, tasks, list records]
+    request_params: [limit, offset]
+    response_fields: [total, limit, offset, has_more, next_offset]
+  - name: cursor
+    used_by: [timeline]
+    response_fields: [has_next_page, next_cursor]
+error_envelope:
+  content_type: application/json
+  shape: '{ "code": <int http status>, "message": <string> }'
+  ref: errors/nex-problem-types.yml
+rate_limiting:
+  signaled: true
+  detail: >-
+    Exceeding limits returns HTTP 429 (Too many requests). Specific
+    X-RateLimit-* / Retry-After header names are not documented.
+streaming:
+  supported: true
+  transport: text/event-stream
+  detail: >-
+    Server-Sent Events for the Insights stream (GET /v1/insights/stream) under
+    the `insight.stream` scope.
+data_model:
+  paradigm: entity-attribute-value (EAV) knowledge graph
+  ref: data-model/nex-data-model.yml
+  attribute_flexibility: >-
+    Many attribute types (full_name, phone, location) accept either a simple
+    string or a structured object.
+versioning:
+  ref: lifecycle/nex-lifecycle.yml
+  scheme: uri-path (/v1/)

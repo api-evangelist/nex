@@ -1,0 +1,34 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/nex-openapi-original.json
+docs: https://docs.nex.ai/api-reference/introduction
+format: custom-json
+envelope:
+  content_type: application/json
+  schema: httpx.APIError
+  shape: '{ "code": <integer http status>, "message": <string> }'
+  note: >-
+    Nex does not use RFC 9457 problem+json. All error responses share a single
+    flat envelope with an integer `code` (the HTTP status) and a human-readable
+    `message`.
+problems:
+- status: 400
+  title: Bad request
+  meaning: Invalid input data
+- status: 401
+  title: Unauthorized
+  meaning: Invalid or missing API key
+- status: 404
+  title: Not found
+  meaning: Resource does not exist
+- status: 410
+  title: Gone
+  meaning: >-
+    Resource is no longer available (returned by long-running/async job and
+    artifact endpoints once results have expired or been removed)
+- status: 429
+  title: Too many requests
+  meaning: Rate limit exceeded
+- status: 500
+  title: Internal server error
+  meaning: Unexpected server-side error

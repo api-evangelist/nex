@@ -1,0 +1,23 @@
+generated: '2026-07-20'
+method: searched
+source: openapi/nex-openapi-original.json
+docs: https://docs.nex.ai/api-reference/introduction
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  format: 'Authorization: Bearer sk-YOUR_API_KEY'
+  scopes_ref: scopes/nex-scopes.yml
+  note: >-
+    API keys are generated from the Nex web UI. Each key carries scopes that
+    gate operations (see scopes/nex-scopes.yml). End-user login to the Nex app
+    itself is brokered by WorkOS AuthKit, but the Developer API is API-key only.
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
+  sources:
+  - openapi/nex-openapi-original.json

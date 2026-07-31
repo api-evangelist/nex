@@ -1,0 +1,29 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.nex.ai/api-reference/introduction
+versioning:
+  scheme: uri-path
+  current: v1
+  detail: >-
+    All versioned endpoints are prefixed with `/v1/` under the base URL
+    https://app.nex.ai/api/developers.
+  docs: https://docs.nex.ai/api-reference/introduction
+soft_delete:
+  supported: true
+  detail: >-
+    Deleting a task or a note archives it (soft delete) rather than hard-deleting
+    the record.
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: >-
+    No formal deprecation/sunset policy is published. The API does return HTTP
+    410 Gone for expired async job results and artifacts, but this is resource
+    expiry, not a versioned-endpoint deprecation contract.
+status_page: null
+sla:
+  url: null
+deprecated_operations: []
+note: >-
+  As of this pass Nex publishes no status page (status.nex.ai does not resolve),
+  no changelog, and no roadmap page. The API is early (v1, YC S2026).

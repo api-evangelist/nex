@@ -1,0 +1,16 @@
+generated: '2026-07-20'
+method: generated
+source: openapi/nex-openapi-original.json
+skills:
+- file: nex-model-the-graph.md
+  name: Model an object type, create records, and connect them
+  api: openapi/nex-openapi-original.json
+  operations: [createObjectDefinition, createAttributeDefinition, createRecord, createRelationshipDefinition, createRelationshipInstance]
+- file: nex-ingest-and-ask.md
+  name: Ingest context and ask grounded questions
+  api: openapi/nex-openapi-original.json
+  operations: [addContext, queryContext, getArtifact, searchRecords]
+- file: nex-organize-with-lists-and-tasks.md
+  name: Group records into lists and attach tasks and notes
+  api: openapi/nex-openapi-original.json
+  operations: [createList, addListMember, getListRecords, createTask, createNote, getRecordTimeline]

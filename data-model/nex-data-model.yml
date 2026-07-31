@@ -1,0 +1,80 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/nex-openapi-original.json
+docs: https://docs.nex.ai/api-reference/introduction
+paradigm: >-
+  Entity-Attribute-Value (EAV) knowledge graph. Object definitions are the
+  schema (node types), records are the entities (nodes), and relationships are
+  typed edges. Tasks, notes, and timeline events attach to records.
+entities:
+- name: Object
+  description: Entity definition / schema for a node type (e.g. Person, Company, Incident, Vendor, Contract)
+  identifier: slug
+  attribute_types: [text, number, email, phone, url, date, boolean, currency, location, select, social_profile, domain, full_name]
+- name: Attribute
+  description: A typed field on an object definition
+  belongs_to: Object
+- name: Record
+  description: An instance of an object definition — an actual entity in the graph
+  identifier: id
+  belongs_to: Object (via object_id / type)
+- name: Relationship
+  description: Typed edge between two object types (definition) and between two records (instance)
+  cardinalities: [one_to_one, one_to_many, many_to_many]
+- name: List
+  description: A working set of records scoped to one object type
+  belongs_to: Object
+- name: Task
+  description: Actionable item associated with a record (priorities low/medium/high/urgent, due dates, soft-delete on archive)
+  belongs_to: Record
+- name: Note
+  description: Free-form text associated with a record (soft-delete on archive)
+  belongs_to: Record
+- name: TimelineEvent
+  description: Chronological activity entry for a record (task/note/attribute-change/relationship events)
+  belongs_to: Record
+- name: Integration
+  description: Connected source system that ingests signal into the graph
+  providers: [google, microsoft, slack, attio, hubspot, salesforce, whatsapp]
+- name: Insight
+  description: AI-derived signal streamed from the graph (SSE)
+- name: KnowledgeGraph
+  description: Unified view combining typed relationships with AI-extracted triplets and semantic links
+relationships:
+- from: Attribute
+  to: Object
+  type: belongs_to
+  via: object slug
+- from: Record
+  to: Object
+  type: belongs_to
+  via: object_id
+- from: List
+  to: Object
+  type: belongs_to
+  via: object slug
+- from: Record
+  to: List
+  type: has_many
+  via: list membership
+- from: Task
+  to: Record
+  type: belongs_to
+  via: record_id
+- from: Note
+  to: Record
+  type: belongs_to
+  via: record_id
+- from: TimelineEvent
+  to: Record
+  type: belongs_to
+  via: record_id
+- from: Record
+  to: Record
+  type: has_many
+  via: typed relationship instance
+starter_object_types:
+- name: Person
+  attributes: [name, email, job_title]
+- name: Company
+  attributes: [name, domain, industry]

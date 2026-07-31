@@ -1,0 +1,38 @@
+generated: '2026-07-20'
+method: searched
+source: https://github.com/nex-crm/homebrew-tap
+docs: https://docs.nex.ai
+name: nex
+description: >-
+  First-party CLI providing organizational context & memory to AI agents via
+  MCP. Connects email, CRM, Slack, meetings, and 100+ tools into one knowledge
+  graph. The npm package `@nex-ai/nex` is a bootstrap shim that delegates to the
+  `nex-cli` platform binary; the Homebrew tap installs the prebuilt binary
+  directly.
+version: 0.1.10
+license: MIT
+install:
+- method: homebrew
+  command: brew install nex-crm/tap/nex
+  source: https://github.com/nex-crm/homebrew-tap
+- method: npm
+  command: npm install -g @nex-ai/nex
+  source: https://www.npmjs.com/package/@nex-ai/nex
+- method: script
+  command: curl -fsSL https://.../install.sh | sh
+platforms:
+- darwin-arm64
+- darwin-x64
+- linux-arm64
+- linux-x64
+capabilities:
+- Runs as a Model Context Protocol (MCP) server for AI agents (stdio)
+- Query and store organizational context / memory (query_context, add_context)
+- Ingest and scan files into the workspace knowledge graph
+commands:
+- name: --version
+  description: Print the CLI version (bare semver)
+notes: >-
+  The interactive command surface requires a TTY; `--version` is the only
+  non-interactive path on the current binary. Full command reference is not yet
+  published in the public docs.

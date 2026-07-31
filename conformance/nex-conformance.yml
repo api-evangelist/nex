@@ -1,0 +1,35 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/nex-openapi-original.json
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: openapi 3.0.0 document published at docs.nex.ai/api-reference/openapi.json
+- id: api-key-auth
+  conforms: true
+  evidence: securitySchemes ApiKeyAuth (apiKey in header Authorization, Bearer format)
+- id: oauth2
+  conforms: false
+  evidence: no oauth2 securityScheme; API-key auth with key-attached scopes
+- id: oidc
+  conforms: false
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a flat {code,message} envelope, not application/problem+json
+- id: sse-streaming
+  conforms: true
+  evidence: GET /v1/insights/stream returns text/event-stream (Server-Sent Events)
+- id: cursor-pagination
+  conforms: true
+  evidence: timeline endpoints return has_next_page + next_cursor
+- id: offset-pagination
+  conforms: true
+  evidence: records/tasks/list-records return total/limit/offset/has_more/next_offset
+- id: json-api
+  conforms: false
+- id: rest
+  conforms: true
+  evidence: resource-oriented HTTP verbs (GET/POST/PUT/PATCH/DELETE) over JSON
+note: >-
+  Derived from the OpenAPI contract only. Nex publishes no compliance program
+  (SOC 2 / ISO 27001 / etc.) as of this pass, so no Compliance pointer is emitted.

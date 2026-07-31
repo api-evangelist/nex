@@ -1,22 +1,337 @@
 aid: nex
 name: Nex
-description: Nex is a company surfaced as a portfolio company of y-combinator and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Nex is the workflow execution and context layer for AI-native business
+  operations — where AI workflows become reliable business software. It builds a
+  unified context graph from a company's connected tools (email, calendar, Slack,
+  and CRMs like HubSpot, Salesforce, and Attio) plus ingested unstructured
+  context, then grounds AI agents in that shared organizational memory. The Nex
+  Developer API is a REST API over the context graph: define object types and
+  attributes, create records and typed relationships, group them into lists,
+  attach tasks and notes, read record timelines, ingest context, ask grounded
+  natural-language questions, stream AI-derived insights over SSE, run full-text
+  search, and trigger compounding intelligence jobs. Authentication is via scoped
+  API keys, and organizational context is also exposed to agents through a
+  first-party Model Context Protocol (MCP) server shipped as the nex CLI.
 url: https://raw.githubusercontent.com/api-evangelist/nex/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://raw.githubusercontent.com/nex-crm/docs/main/logo/nex-logo-light.svg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: api-provider-confirmed
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-apis: []
+- AI Agents
+- Knowledge Graph
+- Context
+- Memory
+- MCP
+- Model Context Protocol
+- Workflow Automation
+- Integrations
+- Developer API
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: nex:nex-ai-lists-api
+  name: Nex AI Lists API
+  description: The AI Lists API from Nex — 2 operation(s) for ai lists.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - AI Lists
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-ai-lists-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-compounding-api
+  name: Nex Compounding API
+  description: The Compounding API from Nex — 2 operation(s) for compounding.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Compounding
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-compounding-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-context-api
+  name: Nex Context API
+  description: The Context API from Nex — 3 operation(s) for context.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Context
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-context-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-graph-api
+  name: Nex Graph API
+  description: The Graph API from Nex — 1 operation(s) for graph.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Graph
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-graph-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-insights-api
+  name: Nex Insights API
+  description: The Insights API from Nex — 2 operation(s) for insights.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-insights-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-integrations-api
+  name: Nex Integrations API
+  description: The Integrations API from Nex — 4 operation(s) for integrations.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-lists-api
+  name: Nex Lists API
+  description: The Lists API from Nex — 4 operation(s) for lists.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Lists
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-lists-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-notes-api
+  name: Nex Notes API
+  description: The Notes API from Nex — 2 operation(s) for notes.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-notes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-notifications-api
+  name: Nex Notifications API
+  description: The Notifications API from Nex — 4 operation(s) for notifications.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-notifications-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-objects-api
+  name: Nex Objects API
+  description: The Objects API from Nex — 1 operation(s) for objects.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Objects
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-objects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-records-api
+  name: Nex Records API
+  description: The Records API from Nex — 3 operation(s) for records.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Records
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-records-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-relationships-api
+  name: Nex Relationships API
+  description: The Relationships API from Nex — 4 operation(s) for relationships.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Relationships
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-relationships-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-schema-api
+  name: Nex Schema API
+  description: The Schema API from Nex — 4 operation(s) for schema.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Schema
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-schema-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-search-api
+  name: Nex Search API
+  description: The Search API from Nex — 1 operation(s) for search.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-search-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-tasks-api
+  name: Nex Tasks API
+  description: The Tasks API from Nex — 2 operation(s) for tasks.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+- aid: nex:nex-timeline-api
+  name: Nex Timeline API
+  description: The Timeline API from Nex — 1 operation(s) for timeline.
+  humanURL: https://docs.nex.ai/api-reference/introduction
+  baseURL: https://app.nex.ai/api/developers
+  tags:
+  - Timeline
+  properties:
+  - type: OpenAPI
+    url: openapi/nex-timeline-api-openapi.yml
+  - type: Documentation
+    url: https://docs.nex.ai
+  - type: APIReference
+    url: https://docs.nex.ai/api-reference/introduction
+common:
+- type: DeveloperPortal
+  url: https://docs.nex.ai
+- type: Documentation
+  url: https://docs.nex.ai
+- type: APIReference
+  url: https://docs.nex.ai/api-reference/introduction
+- type: GettingStarted
+  url: https://docs.nex.ai
+- type: Website
+  url: https://nex.ai
+- type: Blog
+  url: https://nex.ai/blog
+- type: Support
+  url: https://nex.ai/support
+- type: GitHubOrganization
+  url: https://github.com/nex-crm
+- type: Pricing
+  url: https://nex.ai/pricing
+- type: SignUp
+  url: https://app.nex.ai
+- type: TermsOfService
+  url: https://nex.ai/terms
+- type: PrivacyPolicy
+  url: https://nex.ai/privacy-policy
+- type: LLMsTxt
+  url: llms/nex-llms.txt
+- type: Authentication
+  url: authentication/nex-authentication.yml
+- type: OAuthScopes
+  url: scopes/nex-scopes.yml
+- type: MCPServer
+  url: mcp/nex-mcp.yml
+- type: CLI
+  url: cli/nex-cli.yml
+- type: Packages
+  url: packages/nex-packages.yml
+- type: ErrorCatalog
+  url: errors/nex-problem-types.yml
+- type: Conventions
+  url: conventions/nex-conventions.yml
+- type: DataModel
+  url: data-model/nex-data-model.yml
+- type: Conformance
+  url: conformance/nex-conformance.yml
+- type: Lifecycle
+  url: lifecycle/nex-lifecycle.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/nex-agentic-access.yml
+- type: DomainSecurity
+  url: security/nex-domain-security.yml
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 16
+  pass: local-v1

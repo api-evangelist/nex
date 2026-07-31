@@ -1,0 +1,45 @@
+generated: '2026-07-20'
+method: searched
+source: openapi/nex-openapi-original.json
+docs: https://docs.nex.ai/api-reference/introduction
+note: >-
+  Nex uses API-key authentication (Authorization: Bearer). Scopes are attached
+  to each API key at generation time in the Nex web UI; there is no OAuth2 flow.
+  This is the published permission/scope reference for API keys.
+scopes:
+- scope: object.read
+  description: Read object definitions and their attributes
+- scope: object.write
+  description: Create, update, and delete object definitions, attributes, and lists
+- scope: record.read
+  description: Read records, search, view timelines, and access knowledge graph
+- scope: record.write
+  description: Create, update, and delete records and list memberships
+- scope: list.read
+  description: Read list definitions
+- scope: list.member.read
+  description: Read list members and records
+- scope: list.member.write
+  description: Add, update, and remove list members
+- scope: relationship.read
+  description: Read relationship definitions
+- scope: relationship.write
+  description: Create and delete relationship definitions and instances
+- scope: task.read
+  description: Read tasks
+- scope: task.write
+  description: Create, update, and delete tasks
+- scope: note.read
+  description: Read notes
+- scope: note.write
+  description: Create, update, and delete notes
+- scope: integration.read
+  description: List integrations and check connection status
+- scope: integration.write
+  description: Connect and disconnect integrations
+- scope: notification.read
+  description: Read notification preferences and custom notification rules
+- scope: notification.write
+  description: Create, update, and delete notification preferences and custom rules
+- scope: insight.stream
+  description: SSE insight streaming
