@@ -278,6 +278,8 @@ apis:
   - type: APIReference
     url: https://docs.nex.ai/api-reference/introduction
 common:
+- type: Overlay
+  url: overlays/nex-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://docs.nex.ai
 - type: Documentation
