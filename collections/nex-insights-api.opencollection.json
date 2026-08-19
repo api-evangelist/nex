@@ -1,0 +1,78 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Insights API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Insights",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/insights",
+            "params": [
+              {
+                "name": "last",
+                "value": "",
+                "type": "query",
+                "description": "Rolling time window (e.g., '30m', '2h', '1d')"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (RFC3339 UTC timestamp)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (RFC3339 UTC timestamp)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of insights to return"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve insights for the workspace. Supports three query modes: 'last' for a rolling time window (e.g., '30m', '2h'), 'from'/'to' for a date range (RFC3339), or no time params for most recent insights."
+        },
+        {
+          "info": {
+            "name": "Stream insights (SSE)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/insights/stream",
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Stream real-time insights via Server-Sent Events (SSE). On connect, recent insights are replayed as 'insight.replay' events (up to 20). New insights arrive as 'insight.batch.created' events. Keepalive comments are sent every 30 seconds."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

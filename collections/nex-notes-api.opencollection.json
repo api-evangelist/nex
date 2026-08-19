@@ -1,0 +1,143 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Notes API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List notes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/notes",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by associated record ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves notes with optional filtering by associated record. Response capped at 200 notes."
+        },
+        {
+          "info": {
+            "name": "Create a note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/notes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new note, optionally associated with a record"
+        },
+        {
+          "info": {
+            "name": "Get a note",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/notes/:note_id",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "Note ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single note by ID"
+        },
+        {
+          "info": {
+            "name": "Update a note",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.nex.ai/api/developers/v1/notes/:note_id",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "Note ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates properties of an existing note. All fields are optional."
+        },
+        {
+          "info": {
+            "name": "Delete a note",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.nex.ai/api/developers/v1/notes/:note_id",
+            "params": [
+              {
+                "name": "note_id",
+                "value": "",
+                "type": "path",
+                "description": "Note ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Archives (soft-deletes) a note. The note will have an archived_at timestamp set."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

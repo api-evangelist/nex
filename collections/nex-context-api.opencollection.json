@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Context API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Context",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add context to workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/context/text",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Add arbitrary context through unstructured text. This endpoint allows you to provide contextual information about (new or existing) people or companies. Returns an artifact_id that can be used to retrieve the processing results via GET /v1/context/artifacts/{artifact_id}."
+        },
+        {
+          "info": {
+            "name": "Ask AI a question",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/context/ask",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Query information using natural language. This enhanced endpoint supports three types of queries: (1) questions about specific entities (people, companies), (2) questions about multiple entities at once, and (3) generic workspace-level questions that don't reference specific entities. The AI will analyze your workspace context to provide relevant answers."
+        },
+        {
+          "info": {
+            "name": "Retrieve context artifact status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/context/artifacts/:artifact_id",
+            "params": [
+              {
+                "name": "artifact_id",
+                "value": "",
+                "type": "path",
+                "description": "Artifact ID returned from ProcessText"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve the results of a previously submitted ProcessText request using the artifact ID returned from the POST /v1/context/text endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

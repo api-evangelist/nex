@@ -3,26 +3,32 @@ method: searched
 status: published
 source: https://www.npmjs.com/package/@nex-ai/nex
 docs: https://docs.nex.ai
-description: >-
-  Nex ships its context/memory surface to AI agents as a Model Context Protocol
-  (MCP) server delivered through the `nex` CLI ("organizational context & memory
-  for AI agents via MCP"). It connects email, CRM, Slack, meetings, and 100+
-  tools into one knowledge graph and exposes query/store/ingest tools to any
-  MCP-compatible agent framework (Claude Code, Codex, OpenClaw, OpenCode, local
-  LLMs). Tool names differ per platform; equivalents are listed below.
+description: Nex ships its context/memory surface to AI agents as a Model Context Protocol (MCP) server
+  delivered through the `nex` CLI ("organizational context & memory for AI agents via MCP"). It connects
+  email, CRM, Slack, meetings, and 100+ tools into one knowledge graph and exposes query/store/ingest
+  tools to any MCP-compatible agent framework (Claude Code, Codex, OpenClaw, OpenCode, local LLMs). Tool
+  names differ per platform; equivalents are listed below.
 server:
   name: nex
   transport: stdio
-  install: brew install nex-crm/tap/nex   # or: npm install -g @nex-ai/nex
+  install: brew install nex-crm/tap/nex
   package: '@nex-ai/nex'
 tools:
 - name: query_context
-  aliases: [nex_ask]
+  aliases:
+  - nex_ask
   description: Query the workspace context graph for people, companies, projects, or prior decisions
 - name: add_context
-  aliases: [nex_remember]
+  aliases:
+  - nex_remember
   description: Store durable user preferences, project decisions, and lessons learned
 - name: scan_files
   description: Scan repository docs and instruction files so project context stays discoverable
 - name: ingest_context_files
   description: Ingest context files into the workspace knowledge graph
+deployment:
+  mode: local-stdio
+  verified: searched
+  tools: 4
+  checked: '2026-08-12'
+  source: catalog MCP census

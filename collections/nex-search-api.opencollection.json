@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Search API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search records",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Search across all records in the workspace. Results are grouped by object type (e.g., person, company). Partial results are returned if some search types fail."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

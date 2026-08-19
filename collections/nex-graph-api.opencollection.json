@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Graph API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Graph",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get knowledge graph",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/graph",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entity nodes to return"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Use `html` to receive an interactive graph visualization instead of JSON."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the full knowledge graph for the workspace, including CRM entity nodes, relationship edges, context edges (from ingested text), insight triplet edges (AI-extracted subject-predicate-object relationships), insight nodes, and insight link edges (semantic relationships between insights). Supports an optional `limit` query parameter to control the maximum number of entity nodes returned (default 1000, max 5000). Set `Accept: text/html` or `?format=html` to receive an interactive visualizatio"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

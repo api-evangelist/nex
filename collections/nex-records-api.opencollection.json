@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Records API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Records",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/objects/:slug",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "Object slug (e.g., 'person', 'company')"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new record for a specific object type with the provided attributes"
+        },
+        {
+          "info": {
+            "name": "Create or update a record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.nex.ai/api/developers/v1/objects/:slug",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "Object slug (e.g., 'person', 'company')"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new record or updates an existing one based on a matching attribute"
+        },
+        {
+          "info": {
+            "name": "List records for a specific object type",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/objects/:slug/records",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "Object slug (e.g., 'person', 'company')"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves records (entities) for a specific object type with pagination and optional filtering"
+        },
+        {
+          "info": {
+            "name": "Get a specific record by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/records/:record_id",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path",
+                "description": "Record ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a single record with all its attributes"
+        },
+        {
+          "info": {
+            "name": "Update an existing record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.nex.ai/api/developers/v1/records/:record_id",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path",
+                "description": "Record ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates specific attributes of an existing record"
+        },
+        {
+          "info": {
+            "name": "Delete a record",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.nex.ai/api/developers/v1/records/:record_id",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path",
+                "description": "Record ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a record and all its associated data"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

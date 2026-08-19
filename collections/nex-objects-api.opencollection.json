@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Objects API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Objects",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all objects in the workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/objects",
+            "params": [
+              {
+                "name": "include_attributes",
+                "value": "",
+                "type": "query",
+                "description": "Include attribute definitions for each object"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all entity definitions (objects) available in the workspace"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,287 @@
+{
+  "item": [
+    {
+      "id": "3c66f783-8f5d-4182-89f9-3cf5e446fedf",
+      "name": "Objects",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "440dd50f-a3ff-4b6e-adc9-9f277e1dcbd6",
+          "name": "List all objects in the workspace",
+          "request": {
+            "name": "List all objects in the workspace",
+            "description": {
+              "content": "Retrieves all entity definitions (objects) available in the workspace",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "objects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include_attributes",
+                  "value": "<boolean>",
+                  "description": "Include attribute definitions for each object"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a472f325-08d5-4290-a643-3a9b99beeffc",
+              "name": "List of objects",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_attributes",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"attributes\": [\n        {\n          \"description\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"options\": {\n            \"is_multi_value\": false,\n            \"is_required\": true,\n            \"is_unique\": true,\n            \"is_whole_number\": false,\n            \"select_options\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"use_raw_format\": false\n          },\n          \"slug\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"description\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"options\": {\n            \"is_multi_value\": true,\n            \"is_required\": false,\n            \"is_unique\": true,\n            \"is_whole_number\": false,\n            \"select_options\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"use_raw_format\": false\n          },\n          \"slug\": \"string\",\n          \"type\": \"string\"\n        }\n      ],\n      \"created_at\": \"string\",\n      \"description\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"name_plural\": \"string\",\n      \"slug\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"attributes\": [\n        {\n          \"description\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"options\": {\n            \"is_multi_value\": false,\n            \"is_required\": false,\n            \"is_unique\": true,\n            \"is_whole_number\": false,\n            \"select_options\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"use_raw_format\": true\n          },\n          \"slug\": \"string\",\n          \"type\": \"string\"\n        },\n        {\n          \"description\": \"string\",\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"options\": {\n            \"is_multi_value\": true,\n            \"is_required\": false,\n            \"is_unique\": false,\n            \"is_whole_number\": false,\n            \"select_options\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"use_raw_format\": true\n          },\n          \"slug\": \"string\",\n          \"type\": \"string\"\n        }\n      ],\n      \"created_at\": \"string\",\n      \"description\": \"string\",\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"name_plural\": \"string\",\n      \"slug\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "700638b6-7205-44d8-a9fd-9febc36e49d1",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_attributes",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 47,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ff17821-0ab8-4015-a440-d21822dd4b3b",
+              "name": "Unauthorized - Invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_attributes",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 47,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "81e45af4-0d5c-489f-b776-6b363565db43",
+              "name": "Internal server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "objects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_attributes",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 47,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.nex.ai/api/developers",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b82ce4e4-a81a-465f-90f0-9415115e42fe",
+    "name": "Nex Developer AI Lists Objects API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Compounding API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Compounding",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger compounding job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/compounding/trigger",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Triggers an on-demand compounding intelligence job for the workspace. Use after onboarding, file scanning, or bulk context ingestion to run intelligence pipelines immediately instead of waiting for the next scheduled cron cycle. Supported job types: consolidation (merge near-duplicate insights), pattern_detection (discover recurring patterns), playbook_synthesis (generate playbook rules from patterns), decay_sweep (reduce confidence on stale insights), and metrics (snapshot pipeline metrics). Th"
+        },
+        {
+          "info": {
+            "name": "Get compounding job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/compounding/jobs/:job_run_id",
+            "params": [
+              {
+                "name": "job_run_id",
+                "value": "",
+                "type": "path",
+                "description": "The compounding job run identifier returned by the trigger endpoint"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns the current state of a compounding job triggered through the developer API. Poll this endpoint with the job_run_id returned by the trigger endpoint until the status changes from accepted or running to completed or failed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

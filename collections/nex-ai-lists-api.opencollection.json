@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "AI Lists",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an AI List",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/context/list/jobs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create an AI-powered list generation job. The AI will search your workspace and generate a list of records matching your natural language query. Use the returned job_id to poll for results."
+        },
+        {
+          "info": {
+            "name": "Get AI list job status and results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/context/list/jobs/:job_id",
+            "params": [
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "Job ID returned from create job endpoint"
+              },
+              {
+                "name": "include_attributes",
+                "value": "",
+                "type": "query",
+                "description": "Include full attributes for each record in the results"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the status and results of an AI list generation job. Poll this endpoint until the job status is 'completed' or 'failed'."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

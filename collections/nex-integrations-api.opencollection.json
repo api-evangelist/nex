@@ -1,0 +1,116 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Integrations API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List integrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/integrations",
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Lists all available integrations and their current connection status for the authenticated workspace. Returns each integration type/provider combination with any active connections."
+        },
+        {
+          "info": {
+            "name": "Start OAuth connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/integrations/:type/:provider/connect",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "Integration type"
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "path",
+                "description": "Integration provider"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiates an OAuth flow to connect a third-party integration. Returns an authorization URL that the user must visit to grant access, and a connect_id used to poll for completion status."
+        },
+        {
+          "info": {
+            "name": "Get connection status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/integrations/connect/:connect_id/status",
+            "params": [
+              {
+                "name": "connect_id",
+                "value": "",
+                "type": "path",
+                "description": "Connect ID returned by the start connect endpoint"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Polls the status of an in-progress OAuth connection. The connect_id is returned by the Start OAuth Connection endpoint. Poll this endpoint until the status changes from \"pending\" to \"connected\". The connect_id expires after 10 minutes."
+        },
+        {
+          "info": {
+            "name": "Disconnect integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.nex.ai/api/developers/v1/integrations/connections/:connection_id",
+            "params": [
+              {
+                "name": "connection_id",
+                "value": "",
+                "type": "path",
+                "description": "Connection ID to disconnect"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Disconnects an active integration connection. The connection ID can be found in the list integrations response."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

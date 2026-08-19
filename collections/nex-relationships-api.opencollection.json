@@ -1,0 +1,141 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Nex Developer AI Lists Relationships API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Relationships",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List relationship definitions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.nex.ai/api/developers/v1/relationships",
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves all relationship definitions in the workspace"
+        },
+        {
+          "info": {
+            "name": "Create a relationship definition",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/relationships",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a new relationship definition between two object types"
+        },
+        {
+          "info": {
+            "name": "Delete a relationship definition",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.nex.ai/api/developers/v1/relationships/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Relationship definition ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a relationship definition"
+        },
+        {
+          "info": {
+            "name": "Create a relationship instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.nex.ai/api/developers/v1/records/:record_id/relationships",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path",
+                "description": "Record ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Creates a relationship instance between two records"
+        },
+        {
+          "info": {
+            "name": "Delete a relationship instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.nex.ai/api/developers/v1/records/:record_id/relationships/:rel_id",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path",
+                "description": "Record ID"
+              },
+              {
+                "name": "rel_id",
+                "value": "",
+                "type": "path",
+                "description": "Relationship instance ID"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "Authorization",
+              "value": "{{Authorization}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a relationship instance between two records"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

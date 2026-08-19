@@ -1,0 +1,309 @@
+{
+  "item": [
+    {
+      "id": "59bb57a1-4ae5-480f-b2da-0a12ff8f3794",
+      "name": "Graph",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fe26479f-b83b-4cd9-ad37-1f4ed7875cf7",
+          "name": "Get knowledge graph",
+          "request": {
+            "name": "Get knowledge graph",
+            "description": {
+              "content": "Returns the full knowledge graph for the workspace, including CRM entity nodes, relationship edges, context edges (from ingested text), insight triplet edges (AI-extracted subject-predicate-object relationships), insight nodes, and insight link edges (semantic relationships between insights). Supports an optional `limit` query parameter to control the maximum number of entity nodes returned (default 1000, max 5000). Set `Accept: text/html` or `?format=html` to receive an interactive visualization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "graph"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "1000",
+                  "description": "Maximum number of entity nodes to return"
+                },
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "Response format. Use `html` to receive an interactive graph visualization instead of JSON."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fdb03ff8-72ba-4728-8953-acd7c8ce428d",
+              "name": "Knowledge graph data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nodes\": [\n    {\n      \"id\": \"12345\",\n      \"name\": \"John Smith\",\n      \"type\": \"person\",\n      \"definition_slug\": \"person\",\n      \"primary_attribute\": \"string\",\n      \"created_at\": \"2023-01-10T06:33:26.128Z\"\n    },\n    {\n      \"id\": \"12345\",\n      \"name\": \"John Smith\",\n      \"type\": \"person\",\n      \"definition_slug\": \"person\",\n      \"primary_attribute\": \"string\",\n      \"created_at\": \"2023-11-04T08:28:17.830Z\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"string\",\n      \"source\": \"string\",\n      \"target\": \"string\",\n      \"label\": \"works_at\",\n      \"definition_id\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"source\": \"string\",\n      \"target\": \"string\",\n      \"label\": \"works_at\",\n      \"definition_id\": \"string\"\n    }\n  ],\n  \"relationship_definitions\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"entity_1_to_2\": \"string\",\n      \"entity_2_to_1\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"entity_1_to_2\": \"string\",\n      \"entity_2_to_1\": \"string\"\n    }\n  ],\n  \"context_edges\": [\n    {\n      \"id\": \"tri_42\",\n      \"source\": \"12345\",\n      \"target\": \"67890\",\n      \"label\": \"works_with\",\n      \"edge_type\": \"triplet\",\n      \"confidence\": 0.9452576119482777\n    },\n    {\n      \"id\": \"tri_42\",\n      \"source\": \"12345\",\n      \"target\": \"67890\",\n      \"label\": \"works_with\",\n      \"edge_type\": \"triplet\",\n      \"confidence\": 0.5696039853112588\n    }\n  ],\n  \"insight_nodes\": [\n    {\n      \"id\": \"ei:42\",\n      \"content\": \"John prefers email communication over phone calls\",\n      \"type\": \"preference\",\n      \"confidence\": 0.6012815571871445,\n      \"source\": \"knowledge_insight\"\n    },\n    {\n      \"id\": \"ei:42\",\n      \"content\": \"John prefers email communication over phone calls\",\n      \"type\": \"preference\",\n      \"confidence\": 0.5758992645388185,\n      \"source\": \"knowledge_insight\"\n    }\n  ],\n  \"insights\": {\n    \"key_0\": [\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.5699596255915146,\n        \"type\": \"string\"\n      },\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.7896305249917069,\n        \"type\": \"string\"\n      }\n    ],\n    \"key_1\": [\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.940971862384144,\n        \"type\": \"string\"\n      },\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.5391432949621937,\n        \"type\": \"string\"\n      }\n    ],\n    \"key_2\": [\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.9491697523695295,\n        \"type\": \"string\"\n      },\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.44476220747076023,\n        \"type\": \"string\"\n      }\n    ],\n    \"key_3\": [\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.19469834513355133,\n        \"type\": \"string\"\n      },\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.4578468482911362,\n        \"type\": \"string\"\n      }\n    ],\n    \"key_4\": [\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.7974381558915332,\n        \"type\": \"string\"\n      },\n      {\n        \"content\": \"string\",\n        \"confidence\": 0.2025623317579286,\n        \"type\": \"string\"\n      }\n    ]\n  },\n  \"total_nodes\": 8369,\n  \"total_edges\": 3304,\n  \"total_context_edges\": 8898\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5d10647-fefb-450a-b651-85532967d03c",
+              "name": "Bad request - Invalid query parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 5503,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea60300a-462a-4f0b-93d3-04f4debc8a07",
+              "name": "Unauthorized - Invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 5503,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77d10b0c-7ed3-4bb1-9fcd-32e730ca58d5",
+              "name": "Internal server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 5503,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.nex.ai/api/developers",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c150fe21-7f82-49af-8b8b-8b17d85f2aea",
+    "name": "Nex Developer AI Lists Graph API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.",
+      "type": "text/plain"
+    }
+  }
+}
