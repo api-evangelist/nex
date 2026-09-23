@@ -1,22 +1,7 @@
 {
   "provider": "nex",
   "sources": [
-    "nex-ai-lists-api-openapi.yml",
-    "nex-compounding-api-openapi.yml",
-    "nex-context-api-openapi.yml",
-    "nex-graph-api-openapi.yml",
-    "nex-insights-api-openapi.yml",
-    "nex-integrations-api-openapi.yml",
-    "nex-lists-api-openapi.yml",
-    "nex-notes-api-openapi.yml",
-    "nex-notifications-api-openapi.yml",
-    "nex-objects-api-openapi.yml",
-    "nex-records-api-openapi.yml",
-    "nex-relationships-api-openapi.yml",
-    "nex-schema-api-openapi.yml",
-    "nex-search-api-openapi.yml",
-    "nex-tasks-api-openapi.yml",
-    "nex-timeline-api-openapi.yml"
+    "_original/nex-openapi-original.json"
   ],
   "outputs": [
     "nex-ai-lists-api-openapi.yml",
@@ -39,6 +24,43 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "nex-openapi-original.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "nex-openapi-original.json: declared missing tag: AI Lists",
+    "nex-openapi-original.json: declared missing tag: Compounding",
+    "nex-openapi-original.json: declared missing tag: Context",
+    "nex-openapi-original.json: declared missing tag: Graph",
+    "nex-openapi-original.json: declared missing tag: Insights",
+    "nex-openapi-original.json: declared missing tag: Integrations",
+    "nex-openapi-original.json: declared missing tag: Lists",
+    "nex-openapi-original.json: declared missing tag: Notes",
+    "nex-openapi-original.json: declared missing tag: Notifications",
+    "nex-openapi-original.json: declared missing tag: Objects",
+    "nex-openapi-original.json: declared missing tag: Records",
+    "nex-openapi-original.json: declared missing tag: Relationships",
+    "nex-openapi-original.json: declared missing tag: Schema",
+    "nex-openapi-original.json: declared missing tag: Search",
+    "nex-openapi-original.json: declared missing tag: Tasks",
+    "nex-openapi-original.json: declared missing tag: Timeline",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "nex-ai-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-compounding-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-context-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-graph-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-insights-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-notes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-notifications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-objects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-records-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-relationships-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-schema-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "nex-timeline-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

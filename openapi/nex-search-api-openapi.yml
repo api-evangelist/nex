@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Search API
+  title: Nex Developer Search API
   contact: {}
   version: '1.0'
 servers:
@@ -52,6 +52,40 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    developer.SearchResultResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        primary_value:
+          type: string
+          description: Primary display value of the record
+        matched_value:
+          type: string
+          description: Value that matched the search query
+        score:
+          type: number
+          description: Relevance score
+        entity_definition_id:
+          type: string
+          description: Object definition ID
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.SearchRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Search query (1-500 characters)
+      example:
+        query: john doe
     developer.SearchResponse:
       type: object
       properties:
@@ -82,40 +116,6 @@ components:
             score: 0.72
             entity_definition_id: '11'
         errored_search_types: []
-    developer.SearchRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Search query (1-500 characters)
-      example:
-        query: john doe
-    developer.SearchResultResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        primary_value:
-          type: string
-          description: Primary display value of the record
-        matched_value:
-          type: string
-          description: Value that matched the search query
-        score:
-          type: number
-          description: Relevance score
-        entity_definition_id:
-          type: string
-          description: Object definition ID
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

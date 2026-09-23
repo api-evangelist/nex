@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Context API
+  title: Nex Developer Context API
   contact: {}
   version: '1.0'
 servers:
@@ -140,27 +140,6 @@ paths:
       operationId: getArtifact
 components:
   schemas:
-    developer.AddContextTextRequest:
-      type: object
-      required:
-      - content
-      properties:
-        content:
-          type: string
-          description: The unstructured text containing context information about people, companies, or other entities
-        context:
-          type: string
-          description: Optional additional context about the content (e.g., source, type of activity)
-      example:
-        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
-        context: New LinkedIn activity
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.QueryContextResponse:
       type: object
       properties:
@@ -258,24 +237,20 @@ components:
           query_type: entity_specific
           total_entities_searched: 156
           confidence: 0.89
-    developer.QueryContextRequest:
+    developer.AddContextTextRequest:
       type: object
       required:
-      - query
+      - content
       properties:
-        query:
+        content:
           type: string
-          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
+          description: The unstructured text containing context information about people, companies, or other entities
+        context:
+          type: string
+          description: Optional additional context about the content (e.g., source, type of activity)
       example:
-        query: What's the status with techflow.io?
-    developer.AddContextTextResponse:
-      type: object
-      properties:
-        artifact_id:
-          type: integer
-          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
-      example:
-        artifact_id: 32710180831586560
+        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
+        context: New LinkedIn activity
     developer.GetArtifactResponse:
       type: object
       properties:
@@ -373,6 +348,31 @@ components:
           relationships_created: 1
           insights_created: 3
           tasks_suggested: 0
+    developer.QueryContextRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
+      example:
+        query: What's the status with techflow.io?
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.AddContextTextResponse:
+      type: object
+      properties:
+        artifact_id:
+          type: integer
+          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
+      example:
+        artifact_id: 32710180831586560
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

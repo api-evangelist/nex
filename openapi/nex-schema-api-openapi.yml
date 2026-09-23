@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Schema API
+  title: Nex Developer Schema API
   contact: {}
   version: '1.0'
 servers:
@@ -356,24 +356,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.CreateSelectOptionRequest:
-      type: object
-      required:
-      - name
-      properties:
-        id:
-          type: string
-          description: Option ID (optional on create, auto-generated if omitted)
-        name:
-          type: string
-          description: Option display label
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.CreateAttributeDefinitionRequest:
       type: object
       required:
@@ -420,6 +402,43 @@ components:
           - name: Open
           - name: In Progress
           - name: Done
+    developer.CreateAttributeOptionsRequest:
+      type: object
+      properties:
+        is_required:
+          type: boolean
+          description: Field is required
+        is_unique:
+          type: boolean
+          description: Value must be unique
+        is_multi_value:
+          type: boolean
+          description: Allow multiple values
+        use_raw_format:
+          type: boolean
+          description: Store raw format (numbers)
+        is_whole_number:
+          type: boolean
+          description: Number must be integer
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
+          description: Predefined choices for select fields
+    developer.UpdateAttributeOptionsRequest:
+      type: object
+      properties:
+        is_required:
+          type: boolean
+        use_raw_format:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
+          description: Updated select options. Include id to update existing, omit id to create new.
     developer.AttributeDefinitionResponse:
       type: object
       properties:
@@ -471,56 +490,13 @@ components:
           type: string
         type:
           type: string
-    developer.AttributeOptionsResponse:
+    httpx.APIError:
       type: object
       properties:
-        is_multi_value:
-          type: boolean
-        is_required:
-          type: boolean
-        is_unique:
-          type: boolean
-        is_whole_number:
-          type: boolean
-        select_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.SelectOptionResponse'
-        use_raw_format:
-          type: boolean
-    developer.UpdateAttributeOptionsRequest:
-      type: object
-      properties:
-        is_required:
-          type: boolean
-        use_raw_format:
-          type: boolean
-        is_whole_number:
-          type: boolean
-        select_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
-          description: Updated select options. Include id to update existing, omit id to create new.
-    developer.UpdateAttributeDefinitionRequest:
-      type: object
-      properties:
-        name:
+        code:
+          type: integer
+        message:
           type: string
-          description: New display name
-        description:
-          type: string
-          description: New description
-        options:
-          $ref: '#/components/schemas/developer.UpdateAttributeOptionsRequest'
-      example:
-        name: Updated Status
-        options:
-          is_required: false
-          select_options:
-          - id: existing-id
-            name: Renamed
-          - name: New Option
     developer.CreateObjectRequest:
       type: object
       required:
@@ -553,29 +529,25 @@ components:
         slug: project
         description: Project tracker
         type: custom
-    developer.CreateAttributeOptionsRequest:
+    developer.UpdateAttributeDefinitionRequest:
       type: object
       properties:
-        is_required:
-          type: boolean
-          description: Field is required
-        is_unique:
-          type: boolean
-          description: Value must be unique
-        is_multi_value:
-          type: boolean
-          description: Allow multiple values
-        use_raw_format:
-          type: boolean
-          description: Store raw format (numbers)
-        is_whole_number:
-          type: boolean
-          description: Number must be integer
-        select_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.CreateSelectOptionRequest'
-          description: Predefined choices for select fields
+        name:
+          type: string
+          description: New display name
+        description:
+          type: string
+          description: New description
+        options:
+          $ref: '#/components/schemas/developer.UpdateAttributeOptionsRequest'
+      example:
+        name: Updated Status
+        options:
+          is_required: false
+          select_options:
+          - id: existing-id
+            name: Renamed
+          - name: New Option
     developer.SelectOptionResponse:
       type: object
       properties:
@@ -583,6 +555,34 @@ components:
           type: string
         name:
           type: string
+    developer.CreateSelectOptionRequest:
+      type: object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: Option ID (optional on create, auto-generated if omitted)
+        name:
+          type: string
+          description: Option display label
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

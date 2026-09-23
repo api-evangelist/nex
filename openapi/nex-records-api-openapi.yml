@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Records API
+  title: Nex Developer Records API
   contact: {}
   version: '1.0'
 servers:
@@ -314,23 +314,45 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.UpdateRecordRequest:
+    developer.UpdateRecordResponse:
       type: object
       properties:
         attributes:
-          description: Attributes to update
           type: object
           additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
       example:
+        id: '32414268188027655'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-15T14:20:00Z'
+        updated_at: '2024-01-21T11:45:00Z'
         attributes:
+          name:
+            first_name: John
+            last_name: Doe
+          email_addresses:
+          - john@example.com
           job_title: Senior Engineer
+          phone_number:
+            country_code: 1
+            number: '5551234567'
           location:
             city: Boston
             region: MA
             country: US
-          phone_number:
-            country_code: 1
-            number: '5551234567'
     developer.CreateRecordResponse:
       type: object
       properties:
@@ -434,15 +456,163 @@ components:
         sort:
           attribute: name
           direction: asc
-    developer.SortParam:
+    developer.AttributesParam:
+      oneOf:
+      - type: string
+        enum:
+        - all
+        - primary
+        - none
+        description: Simple string values for common attribute sets
+      - type: object
+        properties:
+          mode:
+            type: string
+            enum:
+            - custom
+            description: Must be 'custom' when using object format
+          slugs:
+            type: array
+            items:
+              type: string
+            description: Array of attribute slugs to include
+            minItems: 1
+        required:
+        - mode
+        - slugs
+        description: Object format for custom attribute selection
+      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
+    developer.UpsertRecordRequest:
+      type: object
+      required:
+      - attributes
+      - matching_attribute
+      properties:
+        attributes:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              description: 'Required when creating a new record, but optional when updating an existing record that already has a name. Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
+              oneOf:
+              - type: string
+              - type: object
+                additionalProperties: {}
+          additionalProperties: {}
+        matching_attribute:
+          description: ID or slug of the attribute to match on
+          type: string
+      example:
+        matching_attribute: email_addresses
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+    httpx.APIError:
       type: object
       properties:
-        attribute:
-          description: attribute slug or ID
+        code:
+          type: integer
+        message:
           type: string
-        direction:
-          description: '"asc" or "desc"'
+    developer.UpsertRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
           type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027657'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-21T12:00:00Z'
+        updated_at: '2024-01-21T12:00:00Z'
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+          location:
+            city: San Francisco
+            region: CA
+            country: US
+    developer.UpdateRecordRequest:
+      type: object
+      properties:
+        attributes:
+          description: Attributes to update
+          type: object
+          additionalProperties: {}
+      example:
+        attributes:
+          job_title: Senior Engineer
+          location:
+            city: Boston
+            region: MA
+            country: US
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+    developer.CreateRecordRequest:
+      type: object
+      required:
+      - attributes
+      properties:
+        attributes:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              description: 'Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
+              oneOf:
+              - type: string
+              - type: object
+                additionalProperties: {}
+          additionalProperties: {}
+      example:
+        attributes:
+          name:
+            first_name: John
+            last_name: Doe
+          name (alternative): John Doe
+          email_addresses:
+          - john@example.com
+          phone_number:
+            country_code: 1
+            number: '5551234567'
+          job_title: Software Engineer
+          location:
+            street: 123 Main St
+            city: Boston
+            region: MA
+            postal_code: '02134'
+            country: US
     developer.ListRecordsResponse:
       type: object
       properties:
@@ -494,185 +664,15 @@ components:
         limit: 50
         offset: 0
         total: 247
-    httpx.APIError:
+    developer.SortParam:
       type: object
       properties:
-        code:
-          type: integer
-        message:
+        attribute:
+          description: attribute slug or ID
           type: string
-    developer.CreateRecordRequest:
-      type: object
-      required:
-      - attributes
-      properties:
-        attributes:
-          type: object
-          required:
-          - name
-          properties:
-            name:
-              description: 'Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
-              oneOf:
-              - type: string
-              - type: object
-                additionalProperties: {}
-          additionalProperties: {}
-      example:
-        attributes:
-          name:
-            first_name: John
-            last_name: Doe
-          name (alternative): John Doe
-          email_addresses:
-          - john@example.com
-          phone_number:
-            country_code: 1
-            number: '5551234567'
-          job_title: Software Engineer
-          location:
-            street: 123 Main St
-            city: Boston
-            region: MA
-            postal_code: '02134'
-            country: US
-    developer.UpsertRecordResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
+        direction:
+          description: '"asc" or "desc"'
           type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32414268188027657'
-        object_id: '32414268188027650'
-        type: person
-        workspace_id: '32414268188027645'
-        created_at: '2024-01-21T12:00:00Z'
-        updated_at: '2024-01-21T12:00:00Z'
-        attributes:
-          name:
-            first_name: Jane
-            last_name: Smith
-          email_addresses:
-          - jane@example.com
-          job_title: CTO
-          phone_number:
-            country_code: 1
-            number: '5559876543'
-          location:
-            city: San Francisco
-            region: CA
-            country: US
-    developer.UpsertRecordRequest:
-      type: object
-      required:
-      - attributes
-      - matching_attribute
-      properties:
-        attributes:
-          type: object
-          required:
-          - name
-          properties:
-            name:
-              description: 'Required when creating a new record, but optional when updating an existing record that already has a name. Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
-              oneOf:
-              - type: string
-              - type: object
-                additionalProperties: {}
-          additionalProperties: {}
-        matching_attribute:
-          description: ID or slug of the attribute to match on
-          type: string
-      example:
-        matching_attribute: email_addresses
-        attributes:
-          name:
-            first_name: Jane
-            last_name: Smith
-          email_addresses:
-          - jane@example.com
-          job_title: CTO
-          phone_number:
-            country_code: 1
-            number: '5559876543'
-    developer.UpdateRecordResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
-          type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32414268188027655'
-        object_id: '32414268188027650'
-        type: person
-        workspace_id: '32414268188027645'
-        created_at: '2024-01-15T14:20:00Z'
-        updated_at: '2024-01-21T11:45:00Z'
-        attributes:
-          name:
-            first_name: John
-            last_name: Doe
-          email_addresses:
-          - john@example.com
-          job_title: Senior Engineer
-          phone_number:
-            country_code: 1
-            number: '5551234567'
-          location:
-            city: Boston
-            region: MA
-            country: US
-    developer.AttributesParam:
-      oneOf:
-      - type: string
-        enum:
-        - all
-        - primary
-        - none
-        description: Simple string values for common attribute sets
-      - type: object
-        properties:
-          mode:
-            type: string
-            enum:
-            - custom
-            description: Must be 'custom' when using object format
-          slugs:
-            type: array
-            items:
-              type: string
-            description: Array of attribute slugs to include
-            minItems: 1
-        required:
-        - mode
-        - slugs
-        description: Object format for custom attribute selection
-      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

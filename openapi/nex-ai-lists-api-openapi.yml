@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
   title: Nex Developer AI Lists API
@@ -104,6 +104,37 @@ paths:
       operationId: getAIListJob
 components:
   schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.CreateAIListJobRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query to search items (e.g., 'all companies', 'high priority contacts')
+        object_type:
+          type: string
+          description: 'Type of object to search - ''contact'' or ''company'' (default: ''contact'')'
+        limit:
+          type: integer
+          description: 'Number of results (default: 50, max: 100)'
+          default: 50
+        include_attributes:
+          type: boolean
+          description: 'If true, includes all entity attribute values in response (default: false)'
+          default: false
+      example:
+        query: all companies who have asked for a contract
+        object_type: company
+        limit: 20
+        include_attributes: true
     developer.GetAIListJobResponse:
       type: object
       properties:
@@ -186,30 +217,6 @@ components:
             reason: a16z is a prominent venture capital firm
             highlights:
             - Focus on technology investments
-    developer.CreateAIListJobRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Natural language query to search items (e.g., 'all companies', 'high priority contacts')
-        object_type:
-          type: string
-          description: 'Type of object to search - ''contact'' or ''company'' (default: ''contact'')'
-        limit:
-          type: integer
-          description: 'Number of results (default: 50, max: 100)'
-          default: 50
-        include_attributes:
-          type: boolean
-          description: 'If true, includes all entity attribute values in response (default: false)'
-          default: false
-      example:
-        query: all companies who have asked for a contract
-        object_type: company
-        limit: 20
-        include_attributes: true
     developer.CreateAIListJobResponse:
       type: object
       properties:
@@ -229,13 +236,6 @@ components:
         message:
           job_id: '12345678901234567'
           status: pending
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

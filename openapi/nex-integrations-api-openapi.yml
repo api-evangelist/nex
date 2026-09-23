@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Integrations API
+  title: Nex Developer Integrations API
   contact: {}
   version: '1.0'
 servers:
@@ -196,27 +196,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.ConnectStatusResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: 'Connection status: "pending" while waiting, "connected" when complete'
-          enum:
-          - pending
-          - connected
-          example: connected
-        connection_id:
-          type: integer
-          description: ID of the newly created connection (only present when status is "connected")
-          example: 12345
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.ConnectionResponse:
       type: object
       properties:
@@ -232,6 +211,13 @@ components:
           type: string
           description: Account identifier (email address, username, etc.)
           example: user@example.com
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.ConnectResponse:
       type: object
       properties:
@@ -279,6 +265,20 @@ components:
           description: Active connections for this integration
           items:
             $ref: '#/components/schemas/developer.ConnectionResponse'
+    developer.ConnectStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Connection status: "pending" while waiting, "connected" when complete'
+          enum:
+          - pending
+          - connected
+          example: connected
+        connection_id:
+          type: integer
+          description: ID of the newly created connection (only present when status is "connected")
+          example: 12345
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

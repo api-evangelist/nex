@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Graph API
+  title: Nex Developer Graph API
   contact: {}
   version: '1.0'
 servers:
@@ -68,6 +68,26 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    graph.GraphEdge:
+      type: object
+      description: A CRM relationship edge between two entity nodes
+      properties:
+        id:
+          type: string
+          description: Edge ID
+        source:
+          type: string
+          description: Source node ID
+        target:
+          type: string
+          description: Target node ID
+        label:
+          type: string
+          description: Relationship label (e.g., "works_at", "reports_to")
+          example: works_at
+        definition_id:
+          type: string
+          description: ID of the relationship definition
     graph.GraphNode:
       type: object
       description: A node in the knowledge graph representing a CRM entity or a ghost (unresolved) entity
@@ -95,6 +115,102 @@ components:
           type: string
           format: date-time
           description: When the entity was created
+    graph.ContextEdge:
+      type: object
+      description: 'An edge in the context/knowledge layer of the graph. The `edge_type` field indicates the source: "context" (from ingested text), "triplet" (AI-extracted subject-predicate-object), "insight" (linking an insight node to an entity), or "insight_link" (semantic relationship between two insight nodes).'
+      properties:
+        id:
+          type: string
+          description: 'Edge ID. Prefixed by type: "ctx_" for context, "tri_" for triplet, "ei_edge_" for entity insight edges, and "il_" for insight_link edges.'
+          example: tri_42
+        source:
+          type: string
+          description: Source node ID. Can be an entity ID, ghost ID ("ghost:123"), or insight node ID ("ei:123" or "ki:123").
+          example: '12345'
+        target:
+          type: string
+          description: Target node ID
+          example: '67890'
+        label:
+          type: string
+          description: 'Edge label. For context edges: the relationship type. For triplets: the predicate (e.g., "works_with"). For insight edges: the insight type. For insight_link edges: "related_to" or "contradicts".'
+          example: works_with
+        edge_type:
+          type: string
+          description: Source type of the edge
+          enum:
+          - context
+          - triplet
+          - insight
+          - insight_link
+        confidence:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Confidence score (0-1). Present on triplet edges (extraction confidence) and insight_link edges (similarity score). Null/absent for context and insight edges.
+          minimum: 0
+          maximum: 1
+    graph.GraphRelationshipDefinition:
+      type: object
+      description: Definition of a relationship type
+      properties:
+        id:
+          type: string
+          description: Definition ID
+        name:
+          type: string
+          description: Display name
+        entity_1_to_2:
+          type: string
+          description: Label from entity 1 to entity 2 (e.g., "works_at")
+        entity_2_to_1:
+          type: string
+          description: Inverse label from entity 2 to entity 1 (e.g., "employs")
+    graph.InsightNode:
+      type: object
+      description: An insight node representing AI-extracted knowledge
+      properties:
+        id:
+          type: string
+          description: Insight node ID. Entity insights use "ei:<id>", knowledge insights use "ki:<id>".
+          example: ei:42
+        content:
+          type: string
+          description: The insight text content
+          example: John prefers email communication over phone calls
+        type:
+          type: string
+          description: Insight type (e.g., "preference", "behavior", "fact")
+          example: preference
+        confidence:
+          type: number
+          format: double
+          description: Confidence score (0-1)
+          minimum: 0
+          maximum: 1
+        source:
+          type: string
+          description: 'Source type: "entity_insight" (scoped to an entity) or "knowledge_insight" (workspace-level)'
+          enum:
+          - entity_insight
+          - knowledge_insight
+    graph.EntityInsightSummary:
+      type: object
+      description: Summary of an insight associated with a specific entity
+      properties:
+        content:
+          type: string
+          description: The insight text content
+        confidence:
+          type: number
+          format: double
+          description: Confidence score (0-1)
+          minimum: 0
+          maximum: 1
+        type:
+          type: string
+          description: Insight type
     httpx.APIError:
       type: object
       properties:
@@ -147,121 +263,6 @@ components:
         total_context_edges:
           type: integer
           description: Total number of context edges returned (includes all edge types)
-    graph.GraphEdge:
-      type: object
-      description: A CRM relationship edge between two entity nodes
-      properties:
-        id:
-          type: string
-          description: Edge ID
-        source:
-          type: string
-          description: Source node ID
-        target:
-          type: string
-          description: Target node ID
-        label:
-          type: string
-          description: Relationship label (e.g., "works_at", "reports_to")
-          example: works_at
-        definition_id:
-          type: string
-          description: ID of the relationship definition
-    graph.EntityInsightSummary:
-      type: object
-      description: Summary of an insight associated with a specific entity
-      properties:
-        content:
-          type: string
-          description: The insight text content
-        confidence:
-          type: number
-          format: double
-          description: Confidence score (0-1)
-          minimum: 0
-          maximum: 1
-        type:
-          type: string
-          description: Insight type
-    graph.GraphRelationshipDefinition:
-      type: object
-      description: Definition of a relationship type
-      properties:
-        id:
-          type: string
-          description: Definition ID
-        name:
-          type: string
-          description: Display name
-        entity_1_to_2:
-          type: string
-          description: Label from entity 1 to entity 2 (e.g., "works_at")
-        entity_2_to_1:
-          type: string
-          description: Inverse label from entity 2 to entity 1 (e.g., "employs")
-    graph.InsightNode:
-      type: object
-      description: An insight node representing AI-extracted knowledge
-      properties:
-        id:
-          type: string
-          description: Insight node ID. Entity insights use "ei:<id>", knowledge insights use "ki:<id>".
-          example: ei:42
-        content:
-          type: string
-          description: The insight text content
-          example: John prefers email communication over phone calls
-        type:
-          type: string
-          description: Insight type (e.g., "preference", "behavior", "fact")
-          example: preference
-        confidence:
-          type: number
-          format: double
-          description: Confidence score (0-1)
-          minimum: 0
-          maximum: 1
-        source:
-          type: string
-          description: 'Source type: "entity_insight" (scoped to an entity) or "knowledge_insight" (workspace-level)'
-          enum:
-          - entity_insight
-          - knowledge_insight
-    graph.ContextEdge:
-      type: object
-      description: 'An edge in the context/knowledge layer of the graph. The `edge_type` field indicates the source: "context" (from ingested text), "triplet" (AI-extracted subject-predicate-object), "insight" (linking an insight node to an entity), or "insight_link" (semantic relationship between two insight nodes).'
-      properties:
-        id:
-          type: string
-          description: 'Edge ID. Prefixed by type: "ctx_" for context, "tri_" for triplet, "ei_edge_" for entity insight edges, and "il_" for insight_link edges.'
-          example: tri_42
-        source:
-          type: string
-          description: Source node ID. Can be an entity ID, ghost ID ("ghost:123"), or insight node ID ("ei:123" or "ki:123").
-          example: '12345'
-        target:
-          type: string
-          description: Target node ID
-          example: '67890'
-        label:
-          type: string
-          description: 'Edge label. For context edges: the relationship type. For triplets: the predicate (e.g., "works_with"). For insight edges: the insight type. For insight_link edges: "related_to" or "contradicts".'
-          example: works_with
-        edge_type:
-          type: string
-          description: Source type of the edge
-          enum:
-          - context
-          - triplet
-          - insight
-          - insight_link
-        confidence:
-          type: number
-          format: double
-          description: Confidence score (0-1). Present on triplet edges (extraction confidence) and insight_link edges (similarity score). Null/absent for context and insight edges.
-          nullable: true
-          minimum: 0
-          maximum: 1
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

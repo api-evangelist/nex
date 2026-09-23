@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Relationships API
+  title: Nex Developer Relationships API
   contact: {}
   version: '1.0'
 servers:
@@ -225,6 +225,38 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    developer.CreateRelationshipDefinitionRequest:
+      type: object
+      required:
+      - type
+      - entity_definition_1_id
+      - entity_definition_2_id
+      properties:
+        type:
+          type: string
+          description: Relationship cardinality
+          enum:
+          - one_to_one
+          - one_to_many
+          - many_to_many
+        entity_definition_1_id:
+          type: string
+          description: First object definition ID
+        entity_definition_2_id:
+          type: string
+          description: Second object definition ID
+        entity_1_to_2_predicate:
+          type: string
+          description: Label for 1→2 direction (e.g., 'has')
+        entity_2_to_1_predicate:
+          type: string
+          description: Label for 2→1 direction (e.g., 'belongs to')
+      example:
+        type: one_to_many
+        entity_definition_1_id: '123'
+        entity_definition_2_id: '456'
+        entity_1_to_2_predicate: has
+        entity_2_to_1_predicate: belongs to
     developer.RelationshipInstanceResponse:
       type: object
       properties:
@@ -245,6 +277,13 @@ components:
         entity_1_id: '1001'
         entity_2_id: '2002'
         created_at: '2024-01-15T10:00:00Z'
+    developer.ListRelationshipDefinitionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
     httpx.APIError:
       type: object
       properties:
@@ -302,45 +341,6 @@ components:
         entity_1_to_2_predicate: has
         entity_2_to_1_predicate: belongs to
         created_at: '2024-01-15T10:00:00Z'
-    developer.CreateRelationshipDefinitionRequest:
-      type: object
-      required:
-      - type
-      - entity_definition_1_id
-      - entity_definition_2_id
-      properties:
-        type:
-          type: string
-          description: Relationship cardinality
-          enum:
-          - one_to_one
-          - one_to_many
-          - many_to_many
-        entity_definition_1_id:
-          type: string
-          description: First object definition ID
-        entity_definition_2_id:
-          type: string
-          description: Second object definition ID
-        entity_1_to_2_predicate:
-          type: string
-          description: Label for 1→2 direction (e.g., 'has')
-        entity_2_to_1_predicate:
-          type: string
-          description: Label for 2→1 direction (e.g., 'belongs to')
-      example:
-        type: one_to_many
-        entity_definition_1_id: '123'
-        entity_definition_2_id: '456'
-        entity_1_to_2_predicate: has
-        entity_2_to_1_predicate: belongs to
-    developer.ListRelationshipDefinitionsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

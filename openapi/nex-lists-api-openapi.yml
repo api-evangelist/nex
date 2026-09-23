@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists API
+  title: Nex Developer Lists API
   contact: {}
   version: '1.0'
 servers:
@@ -473,25 +473,12 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.UpdateListRecordRequest:
+    developer.SelectOptionResponse:
       type: object
       properties:
-        attributes:
-          description: Attributes to update
-          type: object
-          additionalProperties: {}
-      example:
-        attributes:
-          status: qualified
-          score: 92
-          notes: Had a great demo call, ready to move forward
-          source: referral
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
+        id:
+          type: string
+        name:
           type: string
     developer.RecordResponse:
       type: object
@@ -537,111 +524,6 @@ components:
           linkedin:
             username: alicejohnson
             url: https://linkedin.com/in/alicejohnson
-    developer.UpdateListRecordResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
-          type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32417546405832962'
-        object_id: '32417546405832950'
-        type: person
-        workspace_id: '32417546405832945'
-        created_at: '2024-01-20T16:45:00Z'
-        updated_at: '2024-01-21T10:30:00Z'
-        attributes:
-          name:
-            first_name: Sarah
-            last_name: Chen
-          email_addresses:
-          - sarah@newstartup.com
-          job_title: VP Engineering
-          status: qualified
-          score: 92
-          notes: Had a great demo call, ready to move forward
-          source: referral
-    developer.ListRecordsRequest:
-      type: object
-      properties:
-        attributes:
-          $ref: '#/components/schemas/developer.AttributesParam'
-        limit:
-          type: integer
-        offset:
-          type: integer
-        sort:
-          $ref: '#/components/schemas/developer.SortParam'
-      example:
-        attributes: all
-        limit: 50
-        offset: 0
-        sort:
-          attribute: name
-          direction: asc
-    developer.ListRecordsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.RecordResponse'
-        limit:
-          type: integer
-        offset:
-          type: integer
-        total:
-          type: integer
-      example:
-        data:
-        - id: '32414268188027655'
-          object_id: '32414268188027650'
-          type: person
-          workspace_id: '32414268188027645'
-          created_at: '2024-01-15T14:20:00Z'
-          updated_at: '2024-01-20T09:15:00Z'
-          attributes:
-            name:
-              first_name: Alice
-              last_name: Johnson
-            email_addresses:
-            - alice@techcorp.com
-            job_title: Product Manager
-            phone_number:
-              country_code: 1
-              number: '5551112222'
-        - id: '32414268188027656'
-          object_id: '32414268188027650'
-          type: person
-          workspace_id: '32414268188027645'
-          created_at: '2024-01-16T08:30:00Z'
-          updated_at: '2024-01-16T08:30:00Z'
-          attributes:
-            name:
-              first_name: Bob
-              last_name: Wilson
-            email_addresses:
-            - bob@startup.io
-            job_title: Founder
-            location:
-              city: San Francisco
-              region: CA
-              country: US
-        limit: 50
-        offset: 0
-        total: 247
     developer.AttributeDefinitionResponse:
       type: object
       properties:
@@ -656,161 +538,6 @@ components:
         slug:
           type: string
         type:
-          type: string
-    developer.CreateListRequest:
-      type: object
-      required:
-      - name
-      - slug
-      properties:
-        name:
-          type: string
-          description: List display name
-        name_plural:
-          type: string
-          description: Plural name
-        slug:
-          type: string
-          description: URL-safe identifier
-        description:
-          type: string
-          description: List description
-      example:
-        name: VIP Contacts
-        slug: vip-contacts
-        description: High-value contacts
-    developer.SortParam:
-      type: object
-      properties:
-        attribute:
-          description: attribute slug or ID
-          type: string
-        direction:
-          description: '"asc" or "desc"'
-          type: string
-    developer.ObjectResponse:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
-        created_at:
-          type: string
-        description:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        name_plural:
-          type: string
-        slug:
-          type: string
-        type:
-          type: string
-    developer.AttributeOptionsResponse:
-      type: object
-      properties:
-        is_multi_value:
-          type: boolean
-        is_required:
-          type: boolean
-        is_unique:
-          type: boolean
-        is_whole_number:
-          type: boolean
-        select_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.SelectOptionResponse'
-        use_raw_format:
-          type: boolean
-    developer.CreateListMemberRequest:
-      type: object
-      properties:
-        attributes:
-          description: Optional list-specific attributes
-          type: object
-          additionalProperties: {}
-        parent_id:
-          description: ID of the existing record to add to the list
-          type: string
-      example:
-        parent_id: '32417546405832961'
-        attributes:
-          source: website
-          status: new
-          score: 85
-          notes: Qualified lead from demo request
-    developer.AttributesParam:
-      oneOf:
-      - type: string
-        enum:
-        - all
-        - primary
-        - none
-        description: Simple string values for common attribute sets
-      - type: object
-        properties:
-          mode:
-            type: string
-            enum:
-            - custom
-            description: Must be 'custom' when using object format
-          slugs:
-            type: array
-            items:
-              type: string
-            description: Array of attribute slugs to include
-            minItems: 1
-        required:
-        - mode
-        - slugs
-        description: Object format for custom attribute selection
-      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
-    developer.CreateListMemberResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
-          type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32417546405832962'
-        object_id: '32417546405832950'
-        type: person
-        workspace_id: '32417546405832945'
-        created_at: '2024-01-20T16:45:00Z'
-        updated_at: '2024-01-20T16:45:00Z'
-        attributes:
-          name:
-            first_name: Sarah
-            last_name: Chen
-          email_addresses:
-          - sarah@newstartup.com
-          job_title: VP Engineering
-          source: website
-          status: new
-          score: 85
-          notes: Qualified lead from demo request
-    developer.SelectOptionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
           type: string
     developer.ListObjectsResponse:
       type: object
@@ -891,6 +618,279 @@ components:
                 name: Healthcare
               - id: retail
                 name: Retail
+    developer.ObjectResponse:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        created_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        name_plural:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+    developer.CreateListRequest:
+      type: object
+      required:
+      - name
+      - slug
+      properties:
+        name:
+          type: string
+          description: List display name
+        name_plural:
+          type: string
+          description: Plural name
+        slug:
+          type: string
+          description: URL-safe identifier
+        description:
+          type: string
+          description: List description
+      example:
+        name: VIP Contacts
+        slug: vip-contacts
+        description: High-value contacts
+    developer.ListRecordsRequest:
+      type: object
+      properties:
+        attributes:
+          $ref: '#/components/schemas/developer.AttributesParam'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/developer.SortParam'
+      example:
+        attributes: all
+        limit: 50
+        offset: 0
+        sort:
+          attribute: name
+          direction: asc
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.UpdateListRecordRequest:
+      type: object
+      properties:
+        attributes:
+          description: Attributes to update
+          type: object
+          additionalProperties: {}
+      example:
+        attributes:
+          status: qualified
+          score: 92
+          notes: Had a great demo call, ready to move forward
+          source: referral
+    developer.AttributesParam:
+      oneOf:
+      - type: string
+        enum:
+        - all
+        - primary
+        - none
+        description: Simple string values for common attribute sets
+      - type: object
+        properties:
+          mode:
+            type: string
+            enum:
+            - custom
+            description: Must be 'custom' when using object format
+          slugs:
+            type: array
+            items:
+              type: string
+            description: Array of attribute slugs to include
+            minItems: 1
+        required:
+        - mode
+        - slugs
+        description: Object format for custom attribute selection
+      description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
+    developer.CreateListMemberRequest:
+      type: object
+      properties:
+        attributes:
+          description: Optional list-specific attributes
+          type: object
+          additionalProperties: {}
+        parent_id:
+          description: ID of the existing record to add to the list
+          type: string
+      example:
+        parent_id: '32417546405832961'
+        attributes:
+          source: website
+          status: new
+          score: 85
+          notes: Qualified lead from demo request
+    developer.SortParam:
+      type: object
+      properties:
+        attribute:
+          description: attribute slug or ID
+          type: string
+        direction:
+          description: '"asc" or "desc"'
+          type: string
+    developer.CreateListMemberResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32417546405832962'
+        object_id: '32417546405832950'
+        type: person
+        workspace_id: '32417546405832945'
+        created_at: '2024-01-20T16:45:00Z'
+        updated_at: '2024-01-20T16:45:00Z'
+        attributes:
+          name:
+            first_name: Sarah
+            last_name: Chen
+          email_addresses:
+          - sarah@newstartup.com
+          job_title: VP Engineering
+          source: website
+          status: new
+          score: 85
+          notes: Qualified lead from demo request
+    developer.ListRecordsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RecordResponse'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+      example:
+        data:
+        - id: '32414268188027655'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-15T14:20:00Z'
+          updated_at: '2024-01-20T09:15:00Z'
+          attributes:
+            name:
+              first_name: Alice
+              last_name: Johnson
+            email_addresses:
+            - alice@techcorp.com
+            job_title: Product Manager
+            phone_number:
+              country_code: 1
+              number: '5551112222'
+        - id: '32414268188027656'
+          object_id: '32414268188027650'
+          type: person
+          workspace_id: '32414268188027645'
+          created_at: '2024-01-16T08:30:00Z'
+          updated_at: '2024-01-16T08:30:00Z'
+          attributes:
+            name:
+              first_name: Bob
+              last_name: Wilson
+            email_addresses:
+            - bob@startup.io
+            job_title: Founder
+            location:
+              city: San Francisco
+              region: CA
+              country: US
+        limit: 50
+        offset: 0
+        total: 247
+    developer.UpdateListRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32417546405832962'
+        object_id: '32417546405832950'
+        type: person
+        workspace_id: '32417546405832945'
+        created_at: '2024-01-20T16:45:00Z'
+        updated_at: '2024-01-21T10:30:00Z'
+        attributes:
+          name:
+            first_name: Sarah
+            last_name: Chen
+          email_addresses:
+          - sarah@newstartup.com
+          job_title: VP Engineering
+          status: qualified
+          score: 92
+          notes: Had a great demo call, ready to move forward
+          source: referral
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

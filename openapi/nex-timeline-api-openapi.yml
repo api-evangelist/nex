@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   description: REST API for accessing and managing your Nex data. Generate API keys from the Nex web UI and use them to authenticate requests.
-  title: Nex Developer AI Lists Timeline API
+  title: Nex Developer Timeline API
   contact: {}
   version: '1.0'
 servers:
@@ -68,21 +68,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.TimelineTaskPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-        due_date:
-          type: string
-          format: date-time
-        priority:
-          type: string
-        completed_at:
-          type: string
-          format: date-time
     developer.TimelineResponse:
       type: object
       properties:
@@ -94,13 +79,13 @@ components:
           type: boolean
         next_cursor:
           type: string
-    httpx.APIError:
+    developer.FieldChangeResponse:
       type: object
       properties:
-        code:
-          type: integer
-        message:
+        field_name:
           type: string
+        old_value: {}
+        new_value: {}
     developer.TimelineEventResponse:
       type: object
       properties:
@@ -155,27 +140,36 @@ components:
         created_by_id: '42'
         is_aggregated: false
         children: []
-    developer.TimelineAttributePayload:
+    developer.TimelineEntityPayload:
       type: object
       properties:
         id:
           type: string
         definition_id:
           type: string
-        slug:
-          type: string
         type:
           type: string
-        value: {}
-        plain_text:
+        name:
           type: string
-    developer.FieldChangeResponse:
+        attributes:
+          type: object
+          additionalProperties: {}
+    developer.TimelineNotePayload:
       type: object
       properties:
-        field_name:
+        id:
           type: string
-        old_value: {}
-        new_value: {}
+        title:
+          type: string
+        content:
+          type: string
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.TimelineEventPayloadResponse:
       type: object
       description: Only the relevant field is populated based on resource_type
@@ -205,29 +199,35 @@ components:
           type: string
         parent_id:
           type: string
-    developer.TimelineNotePayload:
+    developer.TimelineTaskPayload:
       type: object
       properties:
         id:
           type: string
         title:
           type: string
-        content:
+        due_date:
           type: string
-    developer.TimelineEntityPayload:
+          format: date-time
+        priority:
+          type: string
+        completed_at:
+          type: string
+          format: date-time
+    developer.TimelineAttributePayload:
       type: object
       properties:
         id:
           type: string
         definition_id:
           type: string
+        slug:
+          type: string
         type:
           type: string
-        name:
+        value: {}
+        plain_text:
           type: string
-        attributes:
-          type: object
-          additionalProperties: {}
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
