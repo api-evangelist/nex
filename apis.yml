@@ -57,7 +57,7 @@ tags:
 - Context
 - Memory
 - MCP
-- Workflow-Automation
+- Workflow Automation
 - Integration
 - Developer API
 tags_raw:
@@ -71,6 +71,7 @@ tags_raw:
 - Workflow Automation
 - Integrations
 - Developer API
+- Workflow-Automation
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

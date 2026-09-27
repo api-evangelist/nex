@@ -277,6 +277,43 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    developer.CreateCustomNotificationRuleRequest:
+      type: object
+      required:
+      - description
+      properties:
+        description:
+          type: string
+          description: Natural language description of what you want to be notified about
+    developer.CustomNotificationRuleResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique rule ID
+        name:
+          type: string
+          description: Human-readable rule name
+        prompt:
+          type: string
+          description: The natural language prompt describing the notification condition
+        is_enabled:
+          type: boolean
+          description: Whether the rule is currently active
+        schedule:
+          type: string
+          description: Cron-style schedule for rule evaluation
+        created_at:
+          type: string
+          format: date-time
+          description: When the rule was created
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.NotificationFeedResponse:
       type: object
       properties:
@@ -285,6 +322,28 @@ components:
           description: List of notification feed items
           items:
             $ref: '#/components/schemas/developer.NotificationFeedItem'
+    developer.UpdateNotificationPreferencesRequest:
+      type: object
+      properties:
+        frequency_minutes:
+          type: integer
+          description: How often the notification system polls for new alerts (in minutes)
+        enabled_types:
+          type: array
+          description: List of notification types to enable
+          items:
+            type: string
+        digest_enabled:
+          type: boolean
+          description: Whether to enable digest notifications
+    developer.ListCustomNotificationRulesResponse:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: List of custom notification rules
+          items:
+            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
     developer.NotificationFeedItem:
       type: object
       properties:
@@ -319,65 +378,6 @@ components:
               description: List of entity changes that triggered the notification
               items:
                 type: object
-    developer.CustomNotificationRuleResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique rule ID
-        name:
-          type: string
-          description: Human-readable rule name
-        prompt:
-          type: string
-          description: The natural language prompt describing the notification condition
-        is_enabled:
-          type: boolean
-          description: Whether the rule is currently active
-        schedule:
-          type: string
-          description: Cron-style schedule for rule evaluation
-        created_at:
-          type: string
-          format: date-time
-          description: When the rule was created
-    developer.CreateCustomNotificationRuleRequest:
-      type: object
-      required:
-      - description
-      properties:
-        description:
-          type: string
-          description: Natural language description of what you want to be notified about
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.ListCustomNotificationRulesResponse:
-      type: object
-      properties:
-        rules:
-          type: array
-          description: List of custom notification rules
-          items:
-            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
-    developer.UpdateNotificationPreferencesRequest:
-      type: object
-      properties:
-        frequency_minutes:
-          type: integer
-          description: How often the notification system polls for new alerts (in minutes)
-        enabled_types:
-          type: array
-          description: List of notification types to enable
-          items:
-            type: string
-        digest_enabled:
-          type: boolean
-          description: Whether to enable digest notifications
     developer.NotificationPreferencesResponse:
       type: object
       properties:

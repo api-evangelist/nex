@@ -314,6 +314,45 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    developer.UpsertRecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027657'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-21T12:00:00Z'
+        updated_at: '2024-01-21T12:00:00Z'
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+          location:
+            city: San Francisco
+            region: CA
+            country: US
     developer.UpdateRecordResponse:
       type: object
       properties:
@@ -353,6 +392,23 @@ components:
             city: Boston
             region: MA
             country: US
+    developer.UpdateRecordRequest:
+      type: object
+      properties:
+        attributes:
+          description: Attributes to update
+          type: object
+          additionalProperties: {}
+      example:
+        attributes:
+          job_title: Senior Engineer
+          location:
+            city: Boston
+            region: MA
+            country: US
+          phone_number:
+            country_code: 1
+            number: '5551234567'
     developer.CreateRecordResponse:
       type: object
       properties:
@@ -394,68 +450,6 @@ components:
             region: MA
             postal_code: '02134'
             country: US
-    developer.RecordResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
-          type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32414268188027655'
-        object_id: '32414268188027650'
-        type: person
-        workspace_id: '32414268188027645'
-        created_at: '2024-01-15T14:20:00Z'
-        updated_at: '2024-01-20T09:15:00Z'
-        attributes:
-          name:
-            first_name: Alice
-            last_name: Johnson
-          email_addresses:
-          - alice@techcorp.com
-          job_title: Product Manager
-          phone_number:
-            country_code: 1
-            number: '5551112222'
-          location:
-            street: 456 Innovation Dr
-            city: Austin
-            region: TX
-            postal_code: '73301'
-            country: US
-          linkedin:
-            username: alicejohnson
-            url: https://linkedin.com/in/alicejohnson
-    developer.ListRecordsRequest:
-      type: object
-      properties:
-        attributes:
-          $ref: '#/components/schemas/developer.AttributesParam'
-        limit:
-          type: integer
-        offset:
-          type: integer
-        sort:
-          $ref: '#/components/schemas/developer.SortParam'
-      example:
-        attributes: all
-        limit: 50
-        offset: 0
-        sort:
-          attribute: name
-          direction: asc
     developer.AttributesParam:
       oneOf:
       - type: string
@@ -482,39 +476,6 @@ components:
         - slugs
         description: Object format for custom attribute selection
       description: Attributes parameter supports both string values ('all', 'primary', 'none') and object format for custom selection
-    developer.UpsertRecordRequest:
-      type: object
-      required:
-      - attributes
-      - matching_attribute
-      properties:
-        attributes:
-          type: object
-          required:
-          - name
-          properties:
-            name:
-              description: 'Required when creating a new record, but optional when updating an existing record that already has a name. Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
-              oneOf:
-              - type: string
-              - type: object
-                additionalProperties: {}
-          additionalProperties: {}
-        matching_attribute:
-          description: ID or slug of the attribute to match on
-          type: string
-      example:
-        matching_attribute: email_addresses
-        attributes:
-          name:
-            first_name: Jane
-            last_name: Smith
-          email_addresses:
-          - jane@example.com
-          job_title: CTO
-          phone_number:
-            country_code: 1
-            number: '5559876543'
     httpx.APIError:
       type: object
       properties:
@@ -522,62 +483,6 @@ components:
           type: integer
         message:
           type: string
-    developer.UpsertRecordResponse:
-      type: object
-      properties:
-        attributes:
-          type: object
-          additionalProperties: {}
-        created_at:
-          type: string
-        id:
-          type: string
-        object_id:
-          type: string
-        type:
-          type: string
-        updated_at:
-          type: string
-        workspace_id:
-          type: string
-      example:
-        id: '32414268188027657'
-        object_id: '32414268188027650'
-        type: person
-        workspace_id: '32414268188027645'
-        created_at: '2024-01-21T12:00:00Z'
-        updated_at: '2024-01-21T12:00:00Z'
-        attributes:
-          name:
-            first_name: Jane
-            last_name: Smith
-          email_addresses:
-          - jane@example.com
-          job_title: CTO
-          phone_number:
-            country_code: 1
-            number: '5559876543'
-          location:
-            city: San Francisco
-            region: CA
-            country: US
-    developer.UpdateRecordRequest:
-      type: object
-      properties:
-        attributes:
-          description: Attributes to update
-          type: object
-          additionalProperties: {}
-      example:
-        attributes:
-          job_title: Senior Engineer
-          location:
-            city: Boston
-            region: MA
-            country: US
-          phone_number:
-            country_code: 1
-            number: '5551234567'
     developer.CreateRecordRequest:
       type: object
       required:
@@ -613,6 +518,57 @@ components:
             region: MA
             postal_code: '02134'
             country: US
+    developer.UpsertRecordRequest:
+      type: object
+      required:
+      - attributes
+      - matching_attribute
+      properties:
+        attributes:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              description: 'Required when creating a new record, but optional when updating an existing record that already has a name. Can be a string (e.g., ''John Doe'') or an object (e.g., {''first_name'': ''John'', ''last_name'': ''Doe''} for Person objects).'
+              oneOf:
+              - type: string
+              - type: object
+                additionalProperties: {}
+          additionalProperties: {}
+        matching_attribute:
+          description: ID or slug of the attribute to match on
+          type: string
+      example:
+        matching_attribute: email_addresses
+        attributes:
+          name:
+            first_name: Jane
+            last_name: Smith
+          email_addresses:
+          - jane@example.com
+          job_title: CTO
+          phone_number:
+            country_code: 1
+            number: '5559876543'
+    developer.ListRecordsRequest:
+      type: object
+      properties:
+        attributes:
+          $ref: '#/components/schemas/developer.AttributesParam'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort:
+          $ref: '#/components/schemas/developer.SortParam'
+      example:
+        attributes: all
+        limit: 50
+        offset: 0
+        sort:
+          attribute: name
+          direction: asc
     developer.ListRecordsResponse:
       type: object
       properties:
@@ -664,6 +620,50 @@ components:
         limit: 50
         offset: 0
         total: 247
+    developer.RecordResponse:
+      type: object
+      properties:
+        attributes:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+        id:
+          type: string
+        object_id:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+        workspace_id:
+          type: string
+      example:
+        id: '32414268188027655'
+        object_id: '32414268188027650'
+        type: person
+        workspace_id: '32414268188027645'
+        created_at: '2024-01-15T14:20:00Z'
+        updated_at: '2024-01-20T09:15:00Z'
+        attributes:
+          name:
+            first_name: Alice
+            last_name: Johnson
+          email_addresses:
+          - alice@techcorp.com
+          job_title: Product Manager
+          phone_number:
+            country_code: 1
+            number: '5551112222'
+          location:
+            street: 456 Innovation Dr
+            city: Austin
+            region: TX
+            postal_code: '73301'
+            country: US
+          linkedin:
+            username: alicejohnson
+            url: https://linkedin.com/in/alicejohnson
     developer.SortParam:
       type: object
       properties:

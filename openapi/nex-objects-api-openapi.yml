@@ -51,6 +51,30 @@ paths:
       operationId: listObjects
 components:
   schemas:
+    developer.AttributeOptionsResponse:
+      type: object
+      properties:
+        is_multi_value:
+          type: boolean
+        is_required:
+          type: boolean
+        is_unique:
+          type: boolean
+        is_whole_number:
+          type: boolean
+        select_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.SelectOptionResponse'
+        use_raw_format:
+          type: boolean
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.AttributeDefinitionResponse:
       type: object
       properties:
@@ -145,6 +169,13 @@ components:
                 name: Healthcare
               - id: retail
                 name: Retail
+    developer.SelectOptionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     developer.ObjectResponse:
       type: object
       properties:
@@ -166,37 +197,6 @@ components:
           type: string
         type:
           type: string
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.SelectOptionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-    developer.AttributeOptionsResponse:
-      type: object
-      properties:
-        is_multi_value:
-          type: boolean
-        is_required:
-          type: boolean
-        is_unique:
-          type: boolean
-        is_whole_number:
-          type: boolean
-        select_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.SelectOptionResponse'
-        use_raw_format:
-          type: boolean
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

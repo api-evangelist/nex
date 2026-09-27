@@ -69,23 +69,6 @@ components:
         entity_definition_id:
           type: string
           description: Object definition ID
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.SearchRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Search query (1-500 characters)
-      example:
-        query: john doe
     developer.SearchResponse:
       type: object
       properties:
@@ -116,6 +99,23 @@ components:
             score: 0.72
             entity_definition_id: '11'
         errored_search_types: []
+    developer.SearchRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Search query (1-500 characters)
+      example:
+        query: john doe
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

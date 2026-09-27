@@ -68,6 +68,77 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.TimelineEventPayloadResponse:
+      type: object
+      description: Only the relevant field is populated based on resource_type
+      properties:
+        task:
+          $ref: '#/components/schemas/developer.TimelineTaskPayload'
+        note:
+          $ref: '#/components/schemas/developer.TimelineNotePayload'
+        entity:
+          $ref: '#/components/schemas/developer.TimelineEntityPayload'
+        list_item:
+          $ref: '#/components/schemas/developer.TimelineListItemPayload'
+        attribute:
+          $ref: '#/components/schemas/developer.TimelineAttributePayload'
+        field_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.FieldChangeResponse'
+    developer.FieldChangeResponse:
+      type: object
+      properties:
+        field_name:
+          type: string
+        old_value: {}
+        new_value: {}
+    developer.TimelineEntityPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: {}
+    developer.TimelineListItemPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        list_name:
+          type: string
+        parent_id:
+          type: string
+    developer.TimelineAttributePayload:
+      type: object
+      properties:
+        id:
+          type: string
+        definition_id:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        value: {}
+        plain_text:
+          type: string
     developer.TimelineResponse:
       type: object
       properties:
@@ -79,13 +150,30 @@ components:
           type: boolean
         next_cursor:
           type: string
-    developer.FieldChangeResponse:
+    developer.TimelineNotePayload:
       type: object
       properties:
-        field_name:
+        id:
           type: string
-        old_value: {}
-        new_value: {}
+        title:
+          type: string
+        content:
+          type: string
+    developer.TimelineTaskPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        priority:
+          type: string
+        completed_at:
+          type: string
+          format: date-time
     developer.TimelineEventResponse:
       type: object
       properties:
@@ -140,94 +228,6 @@ components:
         created_by_id: '42'
         is_aggregated: false
         children: []
-    developer.TimelineEntityPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        definition_id:
-          type: string
-        type:
-          type: string
-        name:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: {}
-    developer.TimelineNotePayload:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-        content:
-          type: string
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.TimelineEventPayloadResponse:
-      type: object
-      description: Only the relevant field is populated based on resource_type
-      properties:
-        task:
-          $ref: '#/components/schemas/developer.TimelineTaskPayload'
-        note:
-          $ref: '#/components/schemas/developer.TimelineNotePayload'
-        entity:
-          $ref: '#/components/schemas/developer.TimelineEntityPayload'
-        list_item:
-          $ref: '#/components/schemas/developer.TimelineListItemPayload'
-        attribute:
-          $ref: '#/components/schemas/developer.TimelineAttributePayload'
-        field_changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.FieldChangeResponse'
-    developer.TimelineListItemPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        definition_id:
-          type: string
-        list_name:
-          type: string
-        parent_id:
-          type: string
-    developer.TimelineTaskPayload:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-        due_date:
-          type: string
-          format: date-time
-        priority:
-          type: string
-        completed_at:
-          type: string
-          format: date-time
-    developer.TimelineAttributePayload:
-      type: object
-      properties:
-        id:
-          type: string
-        definition_id:
-          type: string
-        slug:
-          type: string
-        type:
-          type: string
-        value: {}
-        plain_text:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

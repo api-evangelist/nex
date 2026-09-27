@@ -104,37 +104,6 @@ paths:
       operationId: getAIListJob
 components:
   schemas:
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.CreateAIListJobRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Natural language query to search items (e.g., 'all companies', 'high priority contacts')
-        object_type:
-          type: string
-          description: 'Type of object to search - ''contact'' or ''company'' (default: ''contact'')'
-        limit:
-          type: integer
-          description: 'Number of results (default: 50, max: 100)'
-          default: 50
-        include_attributes:
-          type: boolean
-          description: 'If true, includes all entity attribute values in response (default: false)'
-          default: false
-      example:
-        query: all companies who have asked for a contract
-        object_type: company
-        limit: 20
-        include_attributes: true
     developer.GetAIListJobResponse:
       type: object
       properties:
@@ -236,6 +205,37 @@ components:
         message:
           job_id: '12345678901234567'
           status: pending
+    developer.CreateAIListJobRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query to search items (e.g., 'all companies', 'high priority contacts')
+        object_type:
+          type: string
+          description: 'Type of object to search - ''contact'' or ''company'' (default: ''contact'')'
+        limit:
+          type: integer
+          description: 'Number of results (default: 50, max: 100)'
+          default: 50
+        include_attributes:
+          type: boolean
+          description: 'If true, includes all entity attribute values in response (default: false)'
+          default: false
+      example:
+        query: all companies who have asked for a contract
+        object_type: company
+        limit: 20
+        include_attributes: true
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

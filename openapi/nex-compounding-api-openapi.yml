@@ -94,13 +94,36 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    httpx.APIError:
+    compounding.TriggerJobResponse:
       type: object
       properties:
-        code:
-          type: integer
-        message:
+        job_run_id:
           type: string
+          format: uuid
+          description: Unique identifier for this job execution
+        job_type:
+          type: string
+          description: The type of job that was executed
+          enum:
+          - consolidation
+          - pattern_detection
+          - playbook_synthesis
+          - decay_sweep
+          - metrics
+        workspace_id:
+          type: integer
+          description: Workspace ID the job ran against
+        dry_run:
+          type: boolean
+          description: Whether the job ran in dry-run mode
+        status:
+          type: string
+          description: Current job status
+          enum:
+          - accepted
+        success:
+          type: boolean
+          description: Whether the job was accepted successfully
     compounding.JobStatusResponse:
       type: object
       properties:
@@ -176,36 +199,13 @@ components:
           type: boolean
           description: If true, preview impact without persisting changes
           default: false
-    compounding.TriggerJobResponse:
+    httpx.APIError:
       type: object
       properties:
-        job_run_id:
-          type: string
-          format: uuid
-          description: Unique identifier for this job execution
-        job_type:
-          type: string
-          description: The type of job that was executed
-          enum:
-          - consolidation
-          - pattern_detection
-          - playbook_synthesis
-          - decay_sweep
-          - metrics
-        workspace_id:
+        code:
           type: integer
-          description: Workspace ID the job ran against
-        dry_run:
-          type: boolean
-          description: Whether the job ran in dry-run mode
-        status:
+        message:
           type: string
-          description: Current job status
-          enum:
-          - accepted
-        success:
-          type: boolean
-          description: Whether the job was accepted successfully
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

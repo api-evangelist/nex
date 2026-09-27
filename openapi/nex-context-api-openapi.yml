@@ -237,20 +237,23 @@ components:
           query_type: entity_specific
           total_entities_searched: 156
           confidence: 0.89
-    developer.AddContextTextRequest:
+    developer.QueryContextRequest:
       type: object
       required:
-      - content
+      - query
       properties:
-        content:
+        query:
           type: string
-          description: The unstructured text containing context information about people, companies, or other entities
-        context:
-          type: string
-          description: Optional additional context about the content (e.g., source, type of activity)
+          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
       example:
-        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
-        context: New LinkedIn activity
+        query: What's the status with techflow.io?
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.GetArtifactResponse:
       type: object
       properties:
@@ -348,23 +351,20 @@ components:
           relationships_created: 1
           insights_created: 3
           tasks_suggested: 0
-    developer.QueryContextRequest:
+    developer.AddContextTextRequest:
       type: object
       required:
-      - query
+      - content
       properties:
-        query:
+        content:
           type: string
-          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
+          description: The unstructured text containing context information about people, companies, or other entities
+        context:
+          type: string
+          description: Optional additional context about the content (e.g., source, type of activity)
       example:
-        query: What's the status with techflow.io?
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
+        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
+        context: New LinkedIn activity
     developer.AddContextTextResponse:
       type: object
       properties:

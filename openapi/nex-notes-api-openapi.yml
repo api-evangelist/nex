@@ -233,31 +233,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.ListNotesResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.NoteResponse'
-    developer.CreateNoteRequest:
-      type: object
-      required:
-      - title
-      properties:
-        title:
-          type: string
-          description: Note title (non-empty)
-        content:
-          type: string
-          description: Note body text
-        entity_id:
-          type: string
-          description: Associated record ID
-      example:
-        title: Meeting notes
-        content: Discussed Q3 roadmap...
-        entity_id: '1001'
     httpx.APIError:
       type: object
       properties:
@@ -280,6 +255,24 @@ components:
       example:
         title: Updated meeting notes
         content: Added action items...
+    developer.CreateNoteRequest:
+      type: object
+      required:
+      - title
+      properties:
+        title:
+          type: string
+          description: Note title (non-empty)
+        content:
+          type: string
+          description: Note body text
+        entity_id:
+          type: string
+          description: Associated record ID
+      example:
+        title: Meeting notes
+        content: Discussed Q3 roadmap...
+        entity_id: '1001'
     developer.NoteResponse:
       type: object
       properties:
@@ -306,6 +299,13 @@ components:
         entity_id: '1001'
         created_by: developer_api
         created_at: '2024-01-15T10:00:00Z'
+    developer.ListNotesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.NoteResponse'
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
