@@ -196,28 +196,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.ConnectionResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Connection ID
-          example: 12345
-        status:
-          type: string
-          description: Connection status
-          example: active
-        identifier:
-          type: string
-          description: Account identifier (email address, username, etc.)
-          example: user@example.com
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.ConnectResponse:
       type: object
       properties:
@@ -229,6 +207,27 @@ components:
           type: string
           description: Encrypted token to poll for connection status. Expires after 10 minutes.
           example: eyJ3Ijo...
+    developer.ConnectStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Connection status: "pending" while waiting, "connected" when complete'
+          enum:
+          - pending
+          - connected
+          example: connected
+        connection_id:
+          type: integer
+          description: ID of the newly created connection (only present when status is "connected")
+          example: 12345
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.IntegrationResponse:
       type: object
       properties:
@@ -265,20 +264,21 @@ components:
           description: Active connections for this integration
           items:
             $ref: '#/components/schemas/developer.ConnectionResponse'
-    developer.ConnectStatusResponse:
+    developer.ConnectionResponse:
       type: object
       properties:
+        id:
+          type: integer
+          description: Connection ID
+          example: 12345
         status:
           type: string
-          description: 'Connection status: "pending" while waiting, "connected" when complete'
-          enum:
-          - pending
-          - connected
-          example: connected
-        connection_id:
-          type: integer
-          description: ID of the newly created connection (only present when status is "connected")
-          example: 12345
+          description: Connection status
+          example: active
+        identifier:
+          type: string
+          description: Account identifier (email address, username, etc.)
+          example: user@example.com
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

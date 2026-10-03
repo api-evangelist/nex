@@ -277,14 +277,28 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.CreateCustomNotificationRuleRequest:
+    developer.ListCustomNotificationRulesResponse:
       type: object
-      required:
-      - description
       properties:
-        description:
-          type: string
-          description: Natural language description of what you want to be notified about
+        rules:
+          type: array
+          description: List of custom notification rules
+          items:
+            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
+    developer.NotificationPreferencesResponse:
+      type: object
+      properties:
+        frequency_minutes:
+          type: integer
+          description: How often the notification system polls for new alerts (in minutes)
+        enabled_types:
+          type: array
+          description: List of enabled notification types
+          items:
+            type: string
+        digest_enabled:
+          type: boolean
+          description: Whether digest notifications are enabled
     developer.CustomNotificationRuleResponse:
       type: object
       properties:
@@ -336,14 +350,6 @@ components:
         digest_enabled:
           type: boolean
           description: Whether to enable digest notifications
-    developer.ListCustomNotificationRulesResponse:
-      type: object
-      properties:
-        rules:
-          type: array
-          description: List of custom notification rules
-          items:
-            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
     developer.NotificationFeedItem:
       type: object
       properties:
@@ -378,20 +384,14 @@ components:
               description: List of entity changes that triggered the notification
               items:
                 type: object
-    developer.NotificationPreferencesResponse:
+    developer.CreateCustomNotificationRuleRequest:
       type: object
+      required:
+      - description
       properties:
-        frequency_minutes:
-          type: integer
-          description: How often the notification system polls for new alerts (in minutes)
-        enabled_types:
-          type: array
-          description: List of enabled notification types
-          items:
-            type: string
-        digest_enabled:
-          type: boolean
-          description: Whether digest notifications are enabled
+        description:
+          type: string
+          description: Natural language description of what you want to be notified about
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

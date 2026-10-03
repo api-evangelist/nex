@@ -140,103 +140,6 @@ paths:
       operationId: getArtifact
 components:
   schemas:
-    developer.QueryContextResponse:
-      type: object
-      properties:
-        answer:
-          type: string
-          description: AI-generated response to the query based on available workspace context
-        entities_considered:
-          type: array
-          description: Entities that were analyzed to generate the answer
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: Entity ID
-              name:
-                type: string
-                description: Entity name
-              type:
-                type: string
-                description: Entity type (PERSON, COMPANY)
-              reason:
-                type: string
-                description: Why this entity was considered relevant
-              insights_matched:
-                type: integer
-                description: Number of insights matched for this entity
-              score:
-                type: number
-                description: Relevance score
-        signals_used:
-          type: array
-          description: Specific signals/insights used to generate the answer
-          items:
-            type: object
-            properties:
-              insight_id:
-                type: integer
-                description: Insight ID
-              entity_id:
-                type: integer
-                description: Entity ID this signal belongs to
-              content:
-                type: string
-                description: Signal content excerpt
-              score:
-                type: number
-                description: Relevance score
-              type:
-                type: string
-                description: Signal type
-        metadata:
-          type: object
-          description: Query processing metadata
-          properties:
-            query_type:
-              type: string
-              enum:
-              - workspace_wide
-              - entity_specific
-              description: Whether the query was about specific entities or workspace-wide
-            total_entities_searched:
-              type: integer
-              description: Total number of entities searched
-            confidence:
-              type: number
-              description: Confidence score of the answer
-      example:
-        answer: Based on the available context, techflow.io appears to be a technology company. Marcus Rodriguez from techflow.io expressed interest in booking a demo on LinkedIn.
-        entities_considered:
-        - id: 25339323448557880
-          name: TechFlow
-          type: COMPANY
-          reason: Direct match for techflow.io domain
-          insights_matched: 3
-          score: 0.95
-        - id: 25339323448557884
-          name: Marcus Rodriguez
-          type: PERSON
-          reason: Associated with TechFlow, recent LinkedIn activity
-          insights_matched: 2
-          score: 0.87
-        signals_used:
-        - insight_id: 38485049540083710
-          entity_id: 25339323448557884
-          content: 'Marcus Rodriguez commented on LinkedIn: Would love to book a demo'
-          score: 0.92
-          type: social_activity
-        - insight_id: 38485049540083710
-          entity_id: 25339323448557880
-          content: TechFlow is a SaaS platform for workflow automation
-          score: 0.88
-          type: company_info
-        metadata:
-          query_type: entity_specific
-          total_entities_searched: 156
-          confidence: 0.89
     developer.QueryContextRequest:
       type: object
       required:
@@ -247,6 +150,20 @@ components:
           description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
       example:
         query: What's the status with techflow.io?
+    developer.AddContextTextRequest:
+      type: object
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          description: The unstructured text containing context information about people, companies, or other entities
+        context:
+          type: string
+          description: Optional additional context about the content (e.g., source, type of activity)
+      example:
+        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
+        context: New LinkedIn activity
     httpx.APIError:
       type: object
       properties:
@@ -254,6 +171,14 @@ components:
           type: integer
         message:
           type: string
+    developer.AddContextTextResponse:
+      type: object
+      properties:
+        artifact_id:
+          type: integer
+          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
+      example:
+        artifact_id: 32710180831586560
     developer.GetArtifactResponse:
       type: object
       properties:
@@ -351,28 +276,103 @@ components:
           relationships_created: 1
           insights_created: 3
           tasks_suggested: 0
-    developer.AddContextTextRequest:
-      type: object
-      required:
-      - content
-      properties:
-        content:
-          type: string
-          description: The unstructured text containing context information about people, companies, or other entities
-        context:
-          type: string
-          description: Optional additional context about the content (e.g., source, type of activity)
-      example:
-        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
-        context: New LinkedIn activity
-    developer.AddContextTextResponse:
+    developer.QueryContextResponse:
       type: object
       properties:
-        artifact_id:
-          type: integer
-          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
+        answer:
+          type: string
+          description: AI-generated response to the query based on available workspace context
+        entities_considered:
+          type: array
+          description: Entities that were analyzed to generate the answer
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Entity ID
+              name:
+                type: string
+                description: Entity name
+              type:
+                type: string
+                description: Entity type (PERSON, COMPANY)
+              reason:
+                type: string
+                description: Why this entity was considered relevant
+              insights_matched:
+                type: integer
+                description: Number of insights matched for this entity
+              score:
+                type: number
+                description: Relevance score
+        signals_used:
+          type: array
+          description: Specific signals/insights used to generate the answer
+          items:
+            type: object
+            properties:
+              insight_id:
+                type: integer
+                description: Insight ID
+              entity_id:
+                type: integer
+                description: Entity ID this signal belongs to
+              content:
+                type: string
+                description: Signal content excerpt
+              score:
+                type: number
+                description: Relevance score
+              type:
+                type: string
+                description: Signal type
+        metadata:
+          type: object
+          description: Query processing metadata
+          properties:
+            query_type:
+              type: string
+              enum:
+              - workspace_wide
+              - entity_specific
+              description: Whether the query was about specific entities or workspace-wide
+            total_entities_searched:
+              type: integer
+              description: Total number of entities searched
+            confidence:
+              type: number
+              description: Confidence score of the answer
       example:
-        artifact_id: 32710180831586560
+        answer: Based on the available context, techflow.io appears to be a technology company. Marcus Rodriguez from techflow.io expressed interest in booking a demo on LinkedIn.
+        entities_considered:
+        - id: 25339323448557880
+          name: TechFlow
+          type: COMPANY
+          reason: Direct match for techflow.io domain
+          insights_matched: 3
+          score: 0.95
+        - id: 25339323448557884
+          name: Marcus Rodriguez
+          type: PERSON
+          reason: Associated with TechFlow, recent LinkedIn activity
+          insights_matched: 2
+          score: 0.87
+        signals_used:
+        - insight_id: 38485049540083710
+          entity_id: 25339323448557884
+          content: 'Marcus Rodriguez commented on LinkedIn: Would love to book a demo'
+          score: 0.92
+          type: social_activity
+        - insight_id: 38485049540083710
+          entity_id: 25339323448557880
+          content: TechFlow is a SaaS platform for workflow automation
+          score: 0.88
+          type: company_info
+        metadata:
+          query_type: entity_specific
+          total_entities_searched: 156
+          confidence: 0.89
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

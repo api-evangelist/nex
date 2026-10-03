@@ -124,6 +124,13 @@ components:
         success:
           type: boolean
           description: Whether the job was accepted successfully
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     compounding.JobStatusResponse:
       type: object
       properties:
@@ -199,13 +206,6 @@ components:
           type: boolean
           description: If true, preview impact without persisting changes
           default: false
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
