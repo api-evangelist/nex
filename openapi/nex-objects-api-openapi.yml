@@ -51,6 +51,56 @@ paths:
       operationId: listObjects
 components:
   schemas:
+    developer.ObjectResponse:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
+        created_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        name_plural:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.AttributeDefinitionResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        options:
+          $ref: '#/components/schemas/developer.AttributeOptionsResponse'
+        slug:
+          type: string
+        type:
+          type: string
+    developer.SelectOptionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     developer.ListObjectsResponse:
       type: object
       properties:
@@ -147,56 +197,6 @@ components:
             $ref: '#/components/schemas/developer.SelectOptionResponse'
         use_raw_format:
           type: boolean
-    developer.SelectOptionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-    developer.AttributeDefinitionResponse:
-      type: object
-      properties:
-        description:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        options:
-          $ref: '#/components/schemas/developer.AttributeOptionsResponse'
-        slug:
-          type: string
-        type:
-          type: string
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.ObjectResponse:
-      type: object
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.AttributeDefinitionResponse'
-        created_at:
-          type: string
-        description:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        name_plural:
-          type: string
-        slug:
-          type: string
-        type:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

@@ -94,6 +94,13 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     compounding.TriggerJobResponse:
       type: object
       properties:
@@ -124,13 +131,24 @@ components:
         success:
           type: boolean
           description: Whether the job was accepted successfully
-    httpx.APIError:
+    compounding.TriggerJobRequest:
       type: object
+      required:
+      - job_type
       properties:
-        code:
-          type: integer
-        message:
+        job_type:
           type: string
+          description: The type of compounding job to run
+          enum:
+          - consolidation
+          - pattern_detection
+          - playbook_synthesis
+          - decay_sweep
+          - metrics
+        dry_run:
+          type: boolean
+          description: If true, preview impact without persisting changes
+          default: false
     compounding.JobStatusResponse:
       type: object
       properties:
@@ -188,24 +206,6 @@ components:
           type: object
           description: Structured error payload for failed jobs
           additionalProperties: true
-    compounding.TriggerJobRequest:
-      type: object
-      required:
-      - job_type
-      properties:
-        job_type:
-          type: string
-          description: The type of compounding job to run
-          enum:
-          - consolidation
-          - pattern_detection
-          - playbook_synthesis
-          - decay_sweep
-          - metrics
-        dry_run:
-          type: boolean
-          description: If true, preview impact without persisting changes
-          default: false
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

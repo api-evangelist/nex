@@ -52,6 +52,30 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.SearchResultResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        primary_value:
+          type: string
+          description: Primary display value of the record
+        matched_value:
+          type: string
+          description: Value that matched the search query
+        score:
+          type: number
+          description: Relevance score
+        entity_definition_id:
+          type: string
+          description: Object definition ID
     developer.SearchResponse:
       type: object
       properties:
@@ -82,13 +106,6 @@ components:
             score: 0.72
             entity_definition_id: '11'
         errored_search_types: []
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.SearchRequest:
       type: object
       required:
@@ -99,23 +116,6 @@ components:
           description: Search query (1-500 characters)
       example:
         query: john doe
-    developer.SearchResultResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        primary_value:
-          type: string
-          description: Primary display value of the record
-        matched_value:
-          type: string
-          description: Value that matched the search query
-        score:
-          type: number
-          description: Relevance score
-        entity_definition_id:
-          type: string
-          description: Object definition ID
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

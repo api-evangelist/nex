@@ -102,6 +102,13 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.InsightResponse:
       type: object
       properties:
@@ -133,13 +140,6 @@ components:
           type: string
           format: date-time
           description: When the insight was generated
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.InsightsResponse:
       type: object
       properties:

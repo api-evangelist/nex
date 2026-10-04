@@ -240,6 +240,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/developer.NoteResponse'
+    developer.UpdateNoteRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: New title
+        content:
+          type: string
+          description: New content
+        entity_id:
+          type: string
+          description: Change associated record
+      example:
+        title: Updated meeting notes
+        content: Added action items...
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.NoteResponse:
       type: object
       properties:
@@ -266,13 +288,6 @@ components:
         entity_id: '1001'
         created_by: developer_api
         created_at: '2024-01-15T10:00:00Z'
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.CreateNoteRequest:
       type: object
       required:
@@ -291,21 +306,6 @@ components:
         title: Meeting notes
         content: Discussed Q3 roadmap...
         entity_id: '1001'
-    developer.UpdateNoteRequest:
-      type: object
-      properties:
-        title:
-          type: string
-          description: New title
-        content:
-          type: string
-          description: New content
-        entity_id:
-          type: string
-          description: Change associated record
-      example:
-        title: Updated meeting notes
-        content: Added action items...
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

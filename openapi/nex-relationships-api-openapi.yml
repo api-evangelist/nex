@@ -245,43 +245,6 @@ components:
         entity_1_id: '1001'
         entity_2_id: '2002'
         created_at: '2024-01-15T10:00:00Z'
-    developer.RelationshipDefinitionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - one_to_one
-          - one_to_many
-          - many_to_many
-        entity_definition_1_id:
-          type: string
-        entity_definition_2_id:
-          type: string
-        entity_1_to_2_predicate:
-          type: string
-        entity_2_to_1_predicate:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-      example:
-        id: '789'
-        type: one_to_many
-        entity_definition_1_id: '123'
-        entity_definition_2_id: '456'
-        entity_1_to_2_predicate: has
-        entity_2_to_1_predicate: belongs to
-        created_at: '2024-01-15T10:00:00Z'
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.CreateRelationshipDefinitionRequest:
       type: object
       required:
@@ -314,13 +277,13 @@ components:
         entity_definition_2_id: '456'
         entity_1_to_2_predicate: has
         entity_2_to_1_predicate: belongs to
-    developer.ListRelationshipDefinitionsResponse:
+    httpx.APIError:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
+        code:
+          type: integer
+        message:
+          type: string
     developer.CreateRelationshipRequest:
       type: object
       required:
@@ -341,6 +304,43 @@ components:
         definition_id: '789'
         entity_1_id: '1001'
         entity_2_id: '2002'
+    developer.ListRelationshipDefinitionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/developer.RelationshipDefinitionResponse'
+    developer.RelationshipDefinitionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - one_to_one
+          - one_to_many
+          - many_to_many
+        entity_definition_1_id:
+          type: string
+        entity_definition_2_id:
+          type: string
+        entity_1_to_2_predicate:
+          type: string
+        entity_2_to_1_predicate:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      example:
+        id: '789'
+        type: one_to_many
+        entity_definition_1_id: '123'
+        entity_definition_2_id: '456'
+        entity_1_to_2_predicate: has
+        entity_2_to_1_predicate: belongs to
+        created_at: '2024-01-15T10:00:00Z'
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

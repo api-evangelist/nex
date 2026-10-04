@@ -277,14 +277,6 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.ListCustomNotificationRulesResponse:
-      type: object
-      properties:
-        rules:
-          type: array
-          description: List of custom notification rules
-          items:
-            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
     developer.NotificationPreferencesResponse:
       type: object
       properties:
@@ -299,28 +291,6 @@ components:
         digest_enabled:
           type: boolean
           description: Whether digest notifications are enabled
-    developer.CustomNotificationRuleResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique rule ID
-        name:
-          type: string
-          description: Human-readable rule name
-        prompt:
-          type: string
-          description: The natural language prompt describing the notification condition
-        is_enabled:
-          type: boolean
-          description: Whether the rule is currently active
-        schedule:
-          type: string
-          description: Cron-style schedule for rule evaluation
-        created_at:
-          type: string
-          format: date-time
-          description: When the rule was created
     httpx.APIError:
       type: object
       properties:
@@ -328,14 +298,6 @@ components:
           type: integer
         message:
           type: string
-    developer.NotificationFeedResponse:
-      type: object
-      properties:
-        items:
-          type: array
-          description: List of notification feed items
-          items:
-            $ref: '#/components/schemas/developer.NotificationFeedItem'
     developer.UpdateNotificationPreferencesRequest:
       type: object
       properties:
@@ -350,6 +312,30 @@ components:
         digest_enabled:
           type: boolean
           description: Whether to enable digest notifications
+    developer.CreateCustomNotificationRuleRequest:
+      type: object
+      required:
+      - description
+      properties:
+        description:
+          type: string
+          description: Natural language description of what you want to be notified about
+    developer.NotificationFeedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          description: List of notification feed items
+          items:
+            $ref: '#/components/schemas/developer.NotificationFeedItem'
+    developer.ListCustomNotificationRulesResponse:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: List of custom notification rules
+          items:
+            $ref: '#/components/schemas/developer.CustomNotificationRuleResponse'
     developer.NotificationFeedItem:
       type: object
       properties:
@@ -384,14 +370,28 @@ components:
               description: List of entity changes that triggered the notification
               items:
                 type: object
-    developer.CreateCustomNotificationRuleRequest:
+    developer.CustomNotificationRuleResponse:
       type: object
-      required:
-      - description
       properties:
-        description:
+        id:
           type: string
-          description: Natural language description of what you want to be notified about
+          description: Unique rule ID
+        name:
+          type: string
+          description: Human-readable rule name
+        prompt:
+          type: string
+          description: The natural language prompt describing the notification condition
+        is_enabled:
+          type: boolean
+          description: Whether the rule is currently active
+        schedule:
+          type: string
+          description: Cron-style schedule for rule evaluation
+        created_at:
+          type: string
+          format: date-time
+          description: When the rule was created
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

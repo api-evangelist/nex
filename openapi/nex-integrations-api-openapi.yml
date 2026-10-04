@@ -196,17 +196,28 @@ paths:
                 $ref: '#/components/schemas/httpx.APIError'
 components:
   schemas:
-    developer.ConnectResponse:
+    developer.ConnectionResponse:
       type: object
       properties:
-        auth_url:
+        id:
+          type: integer
+          description: Connection ID
+          example: 12345
+        status:
           type: string
-          description: OAuth authorization URL. Open this in a browser for the user to grant access.
-          example: https://accounts.google.com/o/oauth2/v2/auth?...
-        connect_id:
+          description: Connection status
+          example: active
+        identifier:
           type: string
-          description: Encrypted token to poll for connection status. Expires after 10 minutes.
-          example: eyJ3Ijo...
+          description: Account identifier (email address, username, etc.)
+          example: user@example.com
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     developer.ConnectStatusResponse:
       type: object
       properties:
@@ -221,13 +232,6 @@ components:
           type: integer
           description: ID of the newly created connection (only present when status is "connected")
           example: 12345
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     developer.IntegrationResponse:
       type: object
       properties:
@@ -264,21 +268,17 @@ components:
           description: Active connections for this integration
           items:
             $ref: '#/components/schemas/developer.ConnectionResponse'
-    developer.ConnectionResponse:
+    developer.ConnectResponse:
       type: object
       properties:
-        id:
-          type: integer
-          description: Connection ID
-          example: 12345
-        status:
+        auth_url:
           type: string
-          description: Connection status
-          example: active
-        identifier:
+          description: OAuth authorization URL. Open this in a browser for the user to grant access.
+          example: https://accounts.google.com/o/oauth2/v2/auth?...
+        connect_id:
           type: string
-          description: Account identifier (email address, username, etc.)
-          example: user@example.com
+          description: Encrypted token to poll for connection status. Expires after 10 minutes.
+          example: eyJ3Ijo...
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'

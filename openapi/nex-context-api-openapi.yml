@@ -140,142 +140,6 @@ paths:
       operationId: getArtifact
 components:
   schemas:
-    developer.QueryContextRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
-      example:
-        query: What's the status with techflow.io?
-    developer.AddContextTextRequest:
-      type: object
-      required:
-      - content
-      properties:
-        content:
-          type: string
-          description: The unstructured text containing context information about people, companies, or other entities
-        context:
-          type: string
-          description: Optional additional context about the content (e.g., source, type of activity)
-      example:
-        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
-        context: New LinkedIn activity
-    httpx.APIError:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
-    developer.AddContextTextResponse:
-      type: object
-      properties:
-        artifact_id:
-          type: integer
-          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
-      example:
-        artifact_id: 32710180831586560
-    developer.GetArtifactResponse:
-      type: object
-      properties:
-        operation_id:
-          type: integer
-          description: Unique identifier for the processing operation
-        status:
-          type: string
-          enum:
-          - unknown
-          - pending
-          - processing
-          - completed
-          - failed
-          description: Current operation status
-        result:
-          type: object
-          description: Processing results (when status is 'completed')
-          properties:
-            entities_extracted:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Entity type (PERSON, COMPANY, ENGAGEMENT)
-                  context_id:
-                    type: integer
-                    description: Internal context ID
-                  canonical_entity_id:
-                    type: integer
-                    description: Entity ID (if linked)
-                  properties:
-                    type: object
-                    description: Entity properties (name, email, job_title, domain, etc.)
-                  previous_properties:
-                    type: object
-                    description: Properties before this operation (for updates)
-                  is_new:
-                    type: boolean
-                    description: Whether entity was created in this operation
-              description: Array of extracted entities with details
-            entities_created:
-              type: integer
-              description: Number of new entities created
-            entities_updated:
-              type: integer
-              description: Number of existing entities updated
-            relationships_created:
-              type: integer
-              description: Number of relationships established
-            insights_created:
-              type: integer
-              description: Number of insights generated
-            tasks_suggested:
-              type: integer
-              description: Number of tasks suggested
-        error:
-          type: string
-          description: Error message if status is 'failed'
-        created_at:
-          type: string
-          description: Operation creation timestamp
-        completed_at:
-          type: string
-          description: Operation completion timestamp
-      example:
-        operation_id: 48066188026052610
-        status: completed
-        created_at: '2025-11-28T14:14:40Z'
-        completed_at: '2025-11-28T14:14:41Z'
-        result:
-          entities_extracted:
-          - type: COMPANY
-            context_id: 38485049540083710
-            canonical_entity_id: 25339323448557880
-            properties:
-              name: Adobe
-              domain: adobe.com
-            previous_properties:
-              name: Adobe
-              domain: null
-            is_new: false
-          - type: PERSON
-            context_id: 38485049540083710
-            canonical_entity_id: 25339323448557884
-            properties:
-              name: John Smith
-              email: john.smith@adobe.com
-              job_title: Product Manager
-            is_new: true
-          entities_created: 1
-          entities_updated: 1
-          relationships_created: 1
-          insights_created: 3
-          tasks_suggested: 0
     developer.QueryContextResponse:
       type: object
       properties:
@@ -373,6 +237,142 @@ components:
           query_type: entity_specific
           total_entities_searched: 156
           confidence: 0.89
+    httpx.APIError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    developer.AddContextTextRequest:
+      type: object
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          description: The unstructured text containing context information about people, companies, or other entities
+        context:
+          type: string
+          description: Optional additional context about the content (e.g., source, type of activity)
+      example:
+        content: 'Marcus Rodriguez commented: "Would love to book a demo"'
+        context: New LinkedIn activity
+    developer.QueryContextRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query - supports single entity questions (e.g., 'What's the status with techflow.io?'), multi-entity questions (e.g., 'Compare engagement levels of Acme Corp and TechFlow'), or general workspace questions (e.g., 'Which deals are most likely to close this quarter?')
+      example:
+        query: What's the status with techflow.io?
+    developer.GetArtifactResponse:
+      type: object
+      properties:
+        operation_id:
+          type: integer
+          description: Unique identifier for the processing operation
+        status:
+          type: string
+          enum:
+          - unknown
+          - pending
+          - processing
+          - completed
+          - failed
+          description: Current operation status
+        result:
+          type: object
+          description: Processing results (when status is 'completed')
+          properties:
+            entities_extracted:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Entity type (PERSON, COMPANY, ENGAGEMENT)
+                  context_id:
+                    type: integer
+                    description: Internal context ID
+                  canonical_entity_id:
+                    type: integer
+                    description: Entity ID (if linked)
+                  properties:
+                    type: object
+                    description: Entity properties (name, email, job_title, domain, etc.)
+                  previous_properties:
+                    type: object
+                    description: Properties before this operation (for updates)
+                  is_new:
+                    type: boolean
+                    description: Whether entity was created in this operation
+              description: Array of extracted entities with details
+            entities_created:
+              type: integer
+              description: Number of new entities created
+            entities_updated:
+              type: integer
+              description: Number of existing entities updated
+            relationships_created:
+              type: integer
+              description: Number of relationships established
+            insights_created:
+              type: integer
+              description: Number of insights generated
+            tasks_suggested:
+              type: integer
+              description: Number of tasks suggested
+        error:
+          type: string
+          description: Error message if status is 'failed'
+        created_at:
+          type: string
+          description: Operation creation timestamp
+        completed_at:
+          type: string
+          description: Operation completion timestamp
+      example:
+        operation_id: 48066188026052610
+        status: completed
+        created_at: '2025-11-28T14:14:40Z'
+        completed_at: '2025-11-28T14:14:41Z'
+        result:
+          entities_extracted:
+          - type: COMPANY
+            context_id: 38485049540083710
+            canonical_entity_id: 25339323448557880
+            properties:
+              name: Adobe
+              domain: adobe.com
+            previous_properties:
+              name: Adobe
+              domain: null
+            is_new: false
+          - type: PERSON
+            context_id: 38485049540083710
+            canonical_entity_id: 25339323448557884
+            properties:
+              name: John Smith
+              email: john.smith@adobe.com
+              job_title: Product Manager
+            is_new: true
+          entities_created: 1
+          entities_updated: 1
+          relationships_created: 1
+          insights_created: 3
+          tasks_suggested: 0
+    developer.AddContextTextResponse:
+      type: object
+      properties:
+        artifact_id:
+          type: integer
+          description: Unique identifier for the processing artifact. Use this ID to retrieve results via GET /v1/context/artifacts/{artifact_id}
+      example:
+        artifact_id: 32710180831586560
   securitySchemes:
     ApiKeyAuth:
       description: 'API key for authentication (format: "Bearer YOUR_API_KEY")'
