@@ -313,6 +313,9 @@ apis:
   - type: APIReference
     url: https://docs.nex.ai/api-reference/introduction
 common:
+- type: CapabilityMap
+  url: capabilities/nex-capability-edges.yml
+  name: Nex Business Capability Map
 - type: Overlay
   url: overlays/nex-openapi-overlay.yaml
 - type: DeveloperPortal

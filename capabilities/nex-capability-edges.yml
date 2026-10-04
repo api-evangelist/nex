@@ -1,0 +1,24 @@
+slug: nex
+provider: Nex
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Schema
+  spec_file: nex-schema-api-openapi.yml
+  capability_id: BC-610.40
+  capability_id_l1: BC-610
+  capability_name: Data Architecture Management
+  confidence: 0.7
+  evidence: POST /v1/objects  createObjectDefinition  Create an object definition; POST /v1/objects/{slug}/attributes  createAttributeDefinition
+  reason: Operations define object and attribute definitions — i.e. the logical data model of the workspace.
+    Data Architecture Management is the honest fit.
